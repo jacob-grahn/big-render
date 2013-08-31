@@ -1,5 +1,16 @@
 bigRender = bigRender || {};
 
+bigRender.event = {
+	TARGET_LAYER_CHANGED: 'targetLayerChanged',
+	HIGHLIGHT_LAYER_CHANGED: 'highlightLayerChanged',
+	LAYER_ADDED: 'layerAdded',
+	LAYER_REMOVED: 'layerRemoved',
+	LAYER_CHANGED: 'layerChanged',
+	TARGET_CHANGED: 'targetChanged',
+	SCROLL_CHANGED: 'scrollChanged'
+};
+
+
 bigRender.command = {
 	CREATE_LAYER: 'createLayer',
 	DELETE_LAYER: 'deleteLayer',
@@ -11,9 +22,9 @@ bigRender.command = {
 
 	MOVE_RECT: 'moveRect',
 	ERASE_RECT: 'eraseRect',
-
 	DRAW_LINE: 'drawLine',
-	DRAW_SHAPE: 'drawShape'
+	DRAW_SHAPE: 'drawShape',
+	DRAW_IMAGE: 'drawImage'
 };
 
 
@@ -45,7 +56,7 @@ bigRender.brush = {
 bigRender.blendMode = {
 	NORMAL: 'normal',
 	ERASE: 'erase'
-}
+};
 
 bigRender.shape = {
 	RECTANGLE: 'rectangle',

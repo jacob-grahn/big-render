@@ -42,74 +42,63 @@ var bigRender = bigRender || {};
 
 
 	p._doCreateLayer = function(e) {
-		var c = e.command;
-		c.layerId = c.layerId || this.model.nextLayerId++;
-
 		var layer = new LayerModel();
-		layer.layerId = e.command.layerId;
+		layer.layerId = e.command.layerId || this.model.nextLayerId++;
+		this.model.addLayer(layer);
 	};
 
 
 	p._undoCreateLayer = function(e) {
+		var layer = this.model.getLayerById(e.command.layerId);
+		if(layer) {
+			this.model.removeLayer(layer);
+			this._pickDefaultTargetLayer(layer);
+		}
 	};
 
 
 	p._doDeleteLayer = function(e) {
+		var layer = this.model.getLayerById(e.command.layerId);
+		if(layer) {
+			layer.active = false;
+			this._pickDefaultTargetLayer(layer);
+		}
 	};
 
 
 	p._undoDeleteLayer = function(e) {
+		var layer = this.model.getLayerById(e.command.layerId);
+		if(layer) {
+			layer.active = true;
+		}
 	};
 
 
 	p._doEditLayer = function(e) {
+		var layer = this.model.getLayerById(e.command.layerId);
+		if(layer) {
+			e.command.oldOptions = layer.copyOptions();
+			layer.setOptions(e.command);
+		}
 	};
 
 
 	p._undoEditLayer = function(e) {
+		var layer = this.model.getLayerById(e.command.layerId);
+		if(layer) {
+			layer.setOptions(e.command.oldOptions);
+		}
 	};
 
 
-
-	doCreateLayer: ( layerId ) =>
-	layerId = parseInt( layerId )
-	layer = new LayerGroup( layerId, @nestArr.slice( 0 ), this )
-	if( @infinite )
-		layer.setPosition( @layerX, @layerY )
-	@container.addChild( layer.container )
-	@layers.push( layer )
-	@targetLayer = layer
-	@sortLayers()
-	return( layer )
-
-
-	undoCreateLayer: ( layerId ) =>
-	layer = @getLayer( layerId )
-	Data.removeFromArray( @layers, layer )
-	@container.removeChild( layer.container )
-	layer.remove()
-	if( @targetLayer == layer )
-		@targetLayer = @layers[ 0 ]
-	@sortLayers()
-
-
-	doDeleteLayer: ( layerId ) =>
-	if( @layers.length > 1 )
-		layerId = parseInt( layerId )
-	layer = @getLayer( layerId )
-	Data.removeFromArray( @layers, layer )
-	@container.removeChild( layer.container )
-	@deletedLayers.push( layer )
-	if( @targetLayer == layer )
-		@targetLayer = @layers[ 0 ]
-	@sortLayers()
-
-
-	undoDeleteLayer: ( layerId ) =>
-	layer = @deletedLayers.pop()
-	@container.addChild( layer.container )
-	@layers.push( layer )
-	@sortLayers()
+	p._pickDefaultTargetLayer = function(layer) {
+		var model = this.model;
+		if(!model.targetLayer || model.targetLayer === layer) {
+			if(model.layers.length > 0) {
+				model.setTargetLayer(model.layers[0]);
+			}
+		}
+	};
 
 
 	bigRender.LayerManager = LayerManager;
