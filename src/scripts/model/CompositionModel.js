@@ -5,6 +5,13 @@ var bigRender = bigRender || {};
 
 
 	var CompositionModel = function() {
+		this.restoreDefaults();
+	};
+
+	var p = CompositionModel.prototype;
+
+
+	p.restoreDefaults = function() {
 		this.layers = [];
 		this.targetLayer = null;
 		this.highlightLayer = null;
@@ -19,8 +26,18 @@ var bigRender = bigRender || {};
 		this.multiImage = false;
 	};
 
-	var p = CompositionModel.prototype;
 
+	p.setDimensions = function(w, h) {
+		this.width = w;
+		this.height = h;
+		this.dispatchEvent({type: bigRender.event.DIMENSIONS_CHANGED, width:w, height:h});
+	};
+
+
+	p.setData = function(data) {
+		this.data = data;
+		this.dispatchEvent({type: bigRender.event.DATA_CHANGED, data:data});
+	};
 
 
 	p.setTargetLayer = function(layer) {

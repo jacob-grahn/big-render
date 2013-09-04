@@ -4,22 +4,35 @@
 	<title>DotProgress</title>
 
 	<!-- build:css styles/dot.css -->
-	<link rel="stylesheet" type="text/css" href="styles/dot.css">
 	<!-- endbuild -->
 
 	<script src="http://code.createjs.com/easeljs-0.6.1.min.js"></script>
 	<!-- build:js scripts/dotProgress.js -->
+	<script src="scripts/constants.js"></script>
+	<script src="utils/CommandDispatcher.js"></script>
 
+	<script src="scripts/controller/CompositionController.js"></script>
+	<script src="scripts/controller/LayerManager.js"></script>
+
+	<script src="scripts/model/CompositionModel.js"></script>
+	<script src="scripts/model/LayerModel.js"></script>
+
+	<script src="scripts/view/CompositionView.js"></script>
+	<script src="scripts/view/LayerBitmapView.js"></script>
+	<script src="scripts/view/LayerObjectView.js"></script>
+	<script src="scripts/view/LayerView.js"></script>
 	<!-- endbuild -->
 </head>
 
 
 <body>
-	<p>Default Settings</p>
-	<div id="dot-holder-1"></div>
+	<p>Draw 3 Lines</p>
+	<div id="holder"></div>
 	<br>
 
 	<script>
+		var holder = document.getElementById('holder');
+		var bigRender = new bigRender.BigRender(holder);
 	</script>
 
 </body>

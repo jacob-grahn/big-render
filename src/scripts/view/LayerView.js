@@ -5,15 +5,11 @@ var bigRender = bigRender || {};
 
 
 	// @extends createjs.Container
-	var LayerView = function(layer, queue) {
+	var LayerView = function(elm, layer, queue) {
 		createjs.Container.call(this); //super
 
 		this.layer = layer;
 		this.commandDispatcher = new bigRender.CommandDispatcher(layer, queue);
-
-		this.canvas = document.createElement('canvas');
-		this.canvas.width = layer.width;
-		this.canvas.height = layer.height;
 
 		this.bitmap = new bigRender.LayerBitmapView(this.canvas, this.commandDispatcher);
 		this.objectHolder = new bigRender.LayerObjectView(this.commandDispatcher);

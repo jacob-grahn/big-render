@@ -35,10 +35,9 @@ var bigRender = bigRender || {};
 	p.clearLastCommand = function() {
 		var model = this.model;
 		if(model.commands.length > 0) {
-			if(model.commands.length === model.targetCommandPos) {
-				model.targetCommandPos--;
-			}
-			model.commands.pop();
+			model.targetCommandPos--;
+			this.commandDispatcher.start();
+			model.commands = model.commands.slice(model.targetCommandPos);
 		}
 	};
 
@@ -49,16 +48,43 @@ var bigRender = bigRender || {};
 
 
 	p.getSaveObj = function() {
+		var model = this.model;
+
+		var saveObj = {};
+		saveObj.v = 5;
+		saveObj.data = model.data;
+		saveObj.layers = [];
+		saveObj.width = model.width;
+		saveObj.height = model.height;
+
+		for(var i=0; i<model.layers.length; i++) {
+			var layer = model.layers[i];
+			saveObj.layers.push(layer.getSaveObj());
+		}
+
+		return(saveObj);
 	};
 
 
-	p.setSaveObj = function() {
+	p.setSaveObj = function(saveObj) {
+		this.clear();
+
+		var model = this.model;
+		model.setData(saveObj.data);
+		model.setDimensions(saveObj.width, saveObj.height);
+
+		for(var i=0; i<saveObj.layers.length; i++) {
+			var layerSaveObj = saveObj.layers[i];
+			var layer = this.layerManager.createLayer();
+			layer.setSaveObj(layerSaveObj);
+		}
 	};
 
 
 	p.undo = function() {
 		if(this.model.targetCommandPos > 0) {
 			this.model.targetCommandPos--;
+			this.commandDispatcher.start();
 		}
 	};
 
@@ -66,7 +92,14 @@ var bigRender = bigRender || {};
 	p.redo = function() {
 		if(this.model.targetCommandPos < this.model.commands.length) {
 			this.model.targetCommandPos++;
+			this.commandDispatcher.start();
 		}
+	};
+
+
+	p.clear = function() {
+		this.commandDispatcher.clear();
+		this.model.restoreDefaults();
 	};
 
 

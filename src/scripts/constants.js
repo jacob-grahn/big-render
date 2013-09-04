@@ -1,13 +1,17 @@
-bigRender = bigRender || {};
+var bigRender = bigRender || {};
 
 bigRender.event = {
+	DATA_CHANGED: 'dataChanged',
+	DIMENSIONS_CHANGED: 'dimensionsChanged',
 	TARGET_LAYER_CHANGED: 'targetLayerChanged',
 	HIGHLIGHT_LAYER_CHANGED: 'highlightLayerChanged',
 	LAYER_ADDED: 'layerAdded',
 	LAYER_REMOVED: 'layerRemoved',
 	LAYER_CHANGED: 'layerChanged',
-	TARGET_CHANGED: 'targetChanged',
-	SCROLL_CHANGED: 'scrollChanged'
+	COMMAND_POS_CHANGED: 'commandPosChanged',
+	SCROLL_CHANGED: 'scrollChanged',
+	COMPLETE: 'complete',
+	PROGRESS: 'progress'
 };
 
 

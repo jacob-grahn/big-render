@@ -40,8 +40,14 @@ var bigRender = bigRender || {};
 
 
 	p.restart = function() {
-		this.commandPos = 0;
+		this.clear();
 		this.start();
+	};
+
+
+	p.clear = function() {
+		this.stop();
+		this.commandPos = 0;
 	};
 
 
@@ -58,18 +64,17 @@ var bigRender = bigRender || {};
 	p._dispatchCurrentCommand = function(action) {
 		var command = this.model.commands[this.commandPos];
 		var type = command.type + action;
-		var commandEvent = new bigRender.CommandDispatcherEvent(type, command);
-		this.dispatchEvent(commandEvent);
+		this.dispatchEvent( {type: type, command:command} );
 	};
 
 
 	p._dispatchProgress = function() {
 		var percentCompleted = this.model.targetCommandPos / this.commandPos;
-		this.dispatchEvent( {type: bigRender.CommandDispatcherEvent.PROGRESS, percentCompleted: percentCompleted } );
+		this.dispatchEvent( {type: bigRender.event.PROGRESS, percentCompleted: percentCompleted } );
 
 		if(this.commandPos === this.model.targetCommandPos) {
 			this.stop();
-			this.dispatchEvent( {type: bigRender.CommandDispatcherEvent.COMPLETE} );
+			this.dispatchEvent( {type: bigRender.event.COMPLETE} );
 		}
 	};
 

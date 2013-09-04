@@ -13,8 +13,17 @@ var bigRender = bigRender || {};
 	var p = LayerManager.prototype;
 
 
+	p.createLayer = function(layerId) {
+		var layer = new bigRender.LayerModel();
+		layer.layerId = layerId || this.model.nextLayerId++;
+		this.model.addLayer(layer);
+		return(layer);
+	};
+
+
 	p.remove = function() {
 		this._removeListeners();
+		this.model = null;
 		this.commandDispatcher = null;
 	};
 
@@ -42,9 +51,8 @@ var bigRender = bigRender || {};
 
 
 	p._doCreateLayer = function(e) {
-		var layer = new LayerModel();
-		layer.layerId = e.command.layerId || this.model.nextLayerId++;
-		this.model.addLayer(layer);
+		e.command.layerId = e.command.layerId || this.model.nextLayerId++;
+		this.createLayer(e.command.layerId);
 	};
 
 
