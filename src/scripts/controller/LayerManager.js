@@ -1,3 +1,5 @@
+/* global $ */
+
 var bigRender = bigRender || {};
 
 (function(){
@@ -7,6 +9,53 @@ var bigRender = bigRender || {};
 	var LayerManager = function(model, commandDispatcher) {
 		this.model = model;
 		this.commandDispatcher = commandDispatcher;
+
+		var self = this;
+
+		self._doCreateLayer = function(e) {
+			var command = e.command;
+			command.layerId = command.layerId || self.model.nextLayerId++;
+			self.createLayer(command.layerId);
+		};
+
+		self._undoCreateLayer = function(e) {
+			var layer = self.model.getLayerById(e.command.layerId);
+			if(layer) {
+				self.model.removeLayer(layer);
+				self._pickDefaultTargetLayer(layer);
+			}
+		};
+
+		self._doDeleteLayer = function(e) {
+			var layer = self.model.getLayerById(e.command.layerId);
+			if(layer) {
+				layer.active = false;
+				self._pickDefaultTargetLayer(layer);
+			}
+		};
+
+		self._undoDeleteLayer = function(e) {
+			var layer = self.model.getLayerById(e.command.layerId);
+			if(layer) {
+				layer.active = true;
+			}
+		};
+
+		self._doEditLayer = function(e) {
+			var layer = self.model.getLayerById(e.command.layerId);
+			if(layer) {
+				e.command.oldOptions = layer.copyOptions();
+				layer.setOptions(e.command);
+			}
+		};
+
+		self._undoEditLayer = function(e) {
+			var layer = self.model.getLayerById(e.command.layerId);
+			if(layer) {
+				layer.setOptions(e.command.oldOptions);
+			}
+		};
+
 		this._createListeners();
 	};
 
@@ -47,55 +96,6 @@ var bigRender = bigRender || {};
 		c.removeEventListener(bigRender.command.DELETE_LAYER + 'Undo', this._undoDeleteLayer);
 		c.removeEventListener(bigRender.command.EDIT_LAYER + 'Do', this._doEditLayer);
 		c.removeEventListener(bigRender.command.EDIT_LAYER + 'Undo', this._undoEditLayer);
-	};
-
-
-	p._doCreateLayer = function(e) {
-		e.command.layerId = e.command.layerId || this.model.nextLayerId++;
-		this.createLayer(e.command.layerId);
-	};
-
-
-	p._undoCreateLayer = function(e) {
-		var layer = this.model.getLayerById(e.command.layerId);
-		if(layer) {
-			this.model.removeLayer(layer);
-			this._pickDefaultTargetLayer(layer);
-		}
-	};
-
-
-	p._doDeleteLayer = function(e) {
-		var layer = this.model.getLayerById(e.command.layerId);
-		if(layer) {
-			layer.active = false;
-			this._pickDefaultTargetLayer(layer);
-		}
-	};
-
-
-	p._undoDeleteLayer = function(e) {
-		var layer = this.model.getLayerById(e.command.layerId);
-		if(layer) {
-			layer.active = true;
-		}
-	};
-
-
-	p._doEditLayer = function(e) {
-		var layer = this.model.getLayerById(e.command.layerId);
-		if(layer) {
-			e.command.oldOptions = layer.copyOptions();
-			layer.setOptions(e.command);
-		}
-	};
-
-
-	p._undoEditLayer = function(e) {
-		var layer = this.model.getLayerById(e.command.layerId);
-		if(layer) {
-			layer.setOptions(e.command.oldOptions);
-		}
 	};
 
 

@@ -37,7 +37,7 @@ var bigRender = bigRender || {};
 		if(model.commands.length > 0) {
 			model.targetCommandPos--;
 			this.commandDispatcher.start();
-			model.commands = model.commands.slice(model.targetCommandPos);
+			model.commands.pop();
 		}
 	};
 

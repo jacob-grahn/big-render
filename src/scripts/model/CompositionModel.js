@@ -1,3 +1,5 @@
+/* global createjs */
+
 var bigRender = bigRender || {};
 
 (function() {
@@ -9,6 +11,7 @@ var bigRender = bigRender || {};
 	};
 
 	var p = CompositionModel.prototype;
+	createjs.EventDispatcher.initialize(p);
 
 
 	p.restoreDefaults = function() {

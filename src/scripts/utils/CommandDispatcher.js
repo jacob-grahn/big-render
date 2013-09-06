@@ -19,14 +19,15 @@ var bigRender = bigRender || {};
 
 	p.start = function() {
 		this.processing = true;
-		if(this.queue) {
+		/*if(this.queue) {
 			if(!this.task) {
 				this.task = this.queue.doRecurring(this._doCommands.bind(this));
 			}
 		}
 		else {
 			this._processCommands(-1);
-		}
+		}*/
+		this._processCommands(-1);
 	};
 
 
@@ -111,16 +112,12 @@ var bigRender = bigRender || {};
 
 	p._undoLastCommand = function() {
 		this.commandPos--;
-		if(!this.processing) {
-			this._dispatchCurrentCommand('Undo');
-		}
+		this._dispatchCurrentCommand('Undo');
 	};
 
 
 	p._doNextCommand = function() {
-		if(!this.processing) {
-			this._dispatchCurrentCommand('Do');
-		}
+		this._dispatchCurrentCommand('Do');
 		this.commandPos++;
 	};
 

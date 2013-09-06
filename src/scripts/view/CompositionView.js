@@ -47,36 +47,49 @@ var bigRender = bigRender || {};
 
 
 	p._targetLayerChangedHandler = function(e) {
-		@targetLayer = layer
+		//do nothing
 	};
 
 
-	p._highlightLayerChangedHandler = function(e) {};
+	p._highlightLayerChangedHandler = function(e) {
+		var hLayer = e.command.layer;
+
+		//highlight the selected layer by fading all other layers out
+		if(hLayer) {
+			_.each(this.layers, function(layerView){
+				if(layerView.layerModel === hLayer) {
+					layerView.setModOpacity(1);
+				}
+				else {
+					layerView.setModOpacity(.5);
+				}
+			});
+		}
+
+		//otherwise return all opacity to normal
+		else {
+			_.each(this.layers, function(layerView) {
+				layerView.setModOpacity(1);
+			});
+		}
+	};
 
 
 	p._layerAddedHandler = function(e) {
-		layerId = parseInt( layerId )
-		layer = new LayerGroup( layerId, @nestArr.slice( 0 ), this )
-		if( @infinite )
-			layer.setPosition( @layerX, @layerY )
-		@container.addChild( layer.container )
-		@layers.push( layer )
-		@targetLayer = layer
-		@sortLayers()
-		return( layer )
+		var layerView = new LayerView(this.model, e.command.layerId);
+		this.stage.addChild(layerView);
+		this.layers.push(layerView);
+		this._sortLayers();
 	};
 
 
 	p._layerRemovedHandler = function(e) {
-		if( @layers.length > 1 )
-			layerId = parseInt( layerId )
-		layer = @getLayer( layerId )
-		Data.removeFromArray( @layers, layer )
-		@container.removeChild( layer.container )
-		@deletedLayers.push( layer )
-		if( @targetLayer == layer )
-			@targetLayer = @layers[ 0 ]
-		@sortLayers()
+		var layerView = _.find(this.layers, function(lv) { return(lv.layerId === e.command.layerId); });
+		if(layerView) {
+			layerView.remove();
+			this.layers = _.without(this.layers, layerView);
+		}
+		this._sortLayers();
 	};
 
 
@@ -87,12 +100,21 @@ var bigRender = bigRender || {};
 
 
 	p._scrollChangedHandler = function(e) {
-		if( @infinite )
-			super( x, y )
-		else
-			super( x + @layerX, y + @layerY )
-		@x = x
-		@y = y
+		for(var i=0; i<this.layers.length; i++) {
+			var layerView = this.layers[i];
+			layerView.setScroll(e.command.x, e.command.y);
+		}
+	};
+
+
+	p._sortLayers = function() {
+		this.layers.sort( function(a,b) {
+			return(a.z - b.z);
+		});
+		for(var i=0; i<this.layers.length; i++) {
+			var layerView = this.layers[i];
+			layerView.setDepth(i);
+		}
 	};
 
 
