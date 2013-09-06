@@ -60,7 +60,6 @@ var bigRender = bigRender || {};
 		if(index !== -1) {
 			this.layers.splice(index, 1);
 			this.dispatchEvent({type: bigRender.event.LAYER_REMOVED, layer: layer});
-			this.pickDefaultTargetLayer();
 		}
 	};
 
@@ -79,7 +78,8 @@ var bigRender = bigRender || {};
 
 
 	p.getLayerById = function(id) {
-		for(var layer in this.layers) {
+		for(var i=0; i<this.layers.length; i++) {
+			var layer = this.layers[i];
 			if(layer.layerId === id) {
 				return(layer);
 			}

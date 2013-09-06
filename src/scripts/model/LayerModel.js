@@ -1,6 +1,9 @@
+/* global createjs */
+
 var bigRender = bigRender || {};
 
 (function(){
+	'use strict';
 
 
 	var LayerModel = function() {
@@ -16,6 +19,7 @@ var bigRender = bigRender || {};
 	};
 
 	var p = LayerModel.prototype;
+	createjs.EventDispatcher.initialize(p);
 
 
 	p.setOptions = function(obj) {
@@ -32,7 +36,7 @@ var bigRender = bigRender || {};
 	p.copyOptions = function() {
 		var copy = JSON.parse(JSON.stringify(this));
 		return(copy);
-	}
+	};
 
 
 	bigRender.LayerModel = LayerModel;

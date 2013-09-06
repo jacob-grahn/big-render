@@ -29,16 +29,15 @@ var bigRender = bigRender || {};
 		self._doDeleteLayer = function(e) {
 			var layer = self.model.getLayerById(e.command.layerId);
 			if(layer) {
-				layer.active = false;
+				e.command.deletedLayer = layer;
+				self.model.removeLayer(layer);
 				self._pickDefaultTargetLayer(layer);
 			}
 		};
 
 		self._undoDeleteLayer = function(e) {
-			var layer = self.model.getLayerById(e.command.layerId);
-			if(layer) {
-				layer.active = true;
-			}
+			var layer = e.command.deletedLayer;
+			self.model.addLayer(layer);
 		};
 
 		self._doEditLayer = function(e) {
