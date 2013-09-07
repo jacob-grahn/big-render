@@ -2,10 +2,11 @@
 var bigRender = bigRender || {};
 
 (function() {
+	'use strict';
 
 
 	// @extends createjs.Container
-	var LayerView = function(elm, layer, queue) {
+	var LayerView = function(layer, queue) {
 		createjs.Container.call(this); //super
 
 		this.layer = layer;
@@ -18,10 +19,7 @@ var bigRender = bigRender || {};
 		this.addChild(this.objectHolder);
 	};
 
-
 	var p = LayerView.prototype = new createjs.Container();
-
-
 
 
 

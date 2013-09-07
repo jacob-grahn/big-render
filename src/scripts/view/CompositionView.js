@@ -72,7 +72,7 @@ var bigRender = bigRender || {};
 
 
 	p._layerAddedHandler = function(e) {
-		var layerView = new LayerView(this.model, e.command.layerId);
+		var layerView = new bigRender.LayerView(this.model, e.command.layerId);
 		this.stage.addChild(layerView);
 		this.layers.push(layerView);
 		this._sortLayers();

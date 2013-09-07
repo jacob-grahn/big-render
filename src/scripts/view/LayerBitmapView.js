@@ -1,3 +1,5 @@
+/* globals createjs, _, jigg */
+
 var bigRender = bigRender || {};
 
 (function() {
@@ -8,6 +10,7 @@ var bigRender = bigRender || {};
 		createjs.Bitmap.call(this, canvas);
 		this.commandDispatcher = commandDispatcher;
 		this._restoreDefaults();
+		_.bindAll(this, '_doDrawImage', '_doDrawLine', '_doDrawShape', '_doEraseRect', '_doMoveRect', '_redraw');
 		this._addListeners();
 	};
 
@@ -22,10 +25,6 @@ var bigRender = bigRender || {};
 	p._restoreDefaults = function() {
 		this.brush = bigRender.brush.SMOOTH;
 		this.blendMode = bigRender.blendMode.NORMAL;
-
-		this.lineThickness = 3;
-		this.lineColor = '#121212';
-		this.lineOpacity = 100;
 
 		this.fillColor = '#343434';
 		this.fillOpacity = 100;
@@ -69,22 +68,105 @@ var bigRender = bigRender || {};
 	};
 
 
-	p._doDrawImage = function() {};
+	p._doDrawImage = function(e) {
+		var c = e.command;
+
+		var srcX = c.srcX || 0;
+		var srcY = c.srcY || 0;
+		var srcWidth = c.srcWidth || c.image.width;
+		var srcHeight = c.srcHeight || c.image.height;
+		var destX = c.destX || 0;
+		var destY = c.destY || 0;
+		var destWidth = c.destWidth || c.image.width;
+		var destHeight = c.destHeight || c.image.width;
+		var rotation = c.rotation || 0;
+		var scaleX = c.scaleX || 1;
+		var scaleY = c.scaleY || 1;
+		var opacity = c.opacity || 1;
+
+		var hWidth = srcWidth / 2;
+		var hHeight = srcHeight / 2;
+		var centerX = destX + hWidth;
+		var centerY = destY + hHeight;
+
+		destX -= hWidth;
+		destY -= hHeight;
+
+		this.ctx.save();
+		this.ctx.globalAlpha = opacity;
+		this.ctx.translate( centerX, centerY );
+		this.ctx.rotate( rotation * jigg.maths.DEG_RAD );
+		this.ctx.scale( scaleX, scaleY );
+
+		this.ctx.drawImage( c.image, srcX, srcY, srcWidth, srcHeight, destX, destY, destWidth, destHeight );
+
+		this.ctx.restore();
+	};
 
 
-	p._doDrawLine = function() {};
+	p._doDrawLine = function(e) {
+		var c = e.command;
+		var path = c.path;
+
+		this.lineColor = c.lineColor || this.lineColor;
+		this.lineOpacity = c.lineOpacity || this.lineOpacity;
+		this.lineThickness = c.lineThickness || this.lineThickness;
+
+		if(this.lineTool === Commands.TOOL_PENCIL) {
+			x -= .5;
+			y -= .5;
+			this.ctx.mozImageSmoothingEnabled = false;
+		}
+
+		this.ctx.beginPath();
+		this.ctx.lineCap = 'round';
+		this.ctx.lineJoin = 'round';
+		this.ctx.lineWidth = this.encoder.lineThickness;
+		this.ctx.moveTo(x, y);
+
+		if(this.encoder.lineTool === Commands.TOOL_ERASER) {
+			this.ctx.globalCompositeOperation = "destination-out";
+			this.ctx.globalAlpha = this.encoder.lineOpacity / 100;
+			this.ctx.strokeStyle = "rgba( 0,0,0,1.0 )";
+		}
+		else {
+			this.ctx.globalAlpha = this.encoder.lineOpacity / 100;
+			this.ctx.strokeStyle = this.encoder.lineColor;
+		}
+
+		path = this.encoder.pathArr;
+
+		if(path.length > 0) {
+			i = 0;
+			len = path.length;
+			while(i < len) {
+				x += parseInt( path[ i ] );
+				y += parseInt( path[ i+1 ] );
+				this.ctx.lineTo( x, y );
+				i += 2;
+			}
+		}
+		else {
+			this.ctx.lineTo( x+.1, y );
+			this.ctx.stroke();
+		}
+
+		this.ctx.globalCompositeOperation = "source-over";
+		this.ctx.mozImageSmoothingEnabled = true;
+		this.ctx.globalAlpha = 1;
+	};
 
 
-	p._doDrawShape = function() {};
+	p._doDrawShape = function(e) {};
 
 
-	p._doEraseRect = function() {};
+	p._doEraseRect = function(e) {};
 
 
-	p._doMoveRect = function() {};
+	p._doMoveRect = function(e) {};
 
 
-	p._redraw = function() {};
+	p._redraw = function(e) {};
 
 
 	bigRender.LayerBitmapView = LayerBitmapView;
