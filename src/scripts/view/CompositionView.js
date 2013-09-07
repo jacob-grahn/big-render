@@ -5,16 +5,12 @@ var bigRender = bigRender || {};
 	'use strict';
 
 
-	var CompositionView = function(elm, model, queue) {
+	var CompositionView = function(canvas, model, queue) {
 		this.model = model;
 		this.queue = queue;
-		this.canvas = document.createElement('canvas');
+		this.canvas = canvas;
 		this.stage = new createjs.Stage(this.canvas);
 		this.layers = [];
-
-		if(elm) {
-			elm.appendChild(this.canvas);
-		}
 
 		this._addListeners();
 	};

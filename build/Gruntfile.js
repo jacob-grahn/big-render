@@ -6,20 +6,14 @@ var mountFolder = function (connect, dir) {
 	return connect.static(require('path').resolve(dir));
 };
 
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
-
 module.exports = function (grunt) {
 	// load all grunt tasks
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// configurable paths
 	var yeomanConfig = {
-		app: 'src',
-		dist: 'dist'
+		app: '../src',
+		dist: '../dist'
 	};
 
 	grunt.initConfig({
@@ -148,22 +142,6 @@ module.exports = function (grunt) {
 					dest: '<%= yeoman.dist %>/images'
 				}]
 			}
-		},
-		cssmin: {
-			// This task is pre-configured if you do not wish to use Usemin
-			// blocks for your CSS. By default, the Usemin block from your
-			// `index.html` will take care of minification, e.g.
-			//
-			//     <!-- build:css({.tmp,app}) styles/main.css -->
-			//
-			// dist: {
-			//     files: {
-			//         '<%= yeoman.dist %>/styles/main.css': [
-			//             '.tmp/styles/{,*/}*.css',
-			//             '<%= yeoman.app %>/styles/{,*/}*.css'
-			//         ]
-			//     }
-			// }
 		},
 		htmlmin: {
 			dist: {

@@ -1,23 +1,26 @@
+/* global _ */
+
 var bigRender = bigRender || {};
 
 (function() {
 	'use strict';
 
 
-	var BigRender = function(elm) {
+	var BigRender = function(canvas) {
 		this.queue = new bigRender.Queue();
 		this.model = new bigRender.CompositionModel();
 		this.controller = new bigRender.CompositionController(this.model);
-		this.view = new bigRender.CompositionView(elm, this.model, this.queue);
+		this.view = new bigRender.CompositionView(canvas, this.model, this.queue);
 
-		this.addCommand = this.controller.addCommand;
-		this.replaceLastCommand = this.controller.replaceLastCommand;
-		this.clearLastCommand = this.controller.clearLastCommand;
-		this.highlightLayer = this.controller.highlightLayer;
-		this.getSaveObj = this.controller.getSaveObj;
-		this.setSaveObj = this.controller.setSaveObj;
-		this.undo = this.controller.undo;
-		this.redo = this.controller.redo;
+		var c = this.controller;
+		this.addCommand = _.bind(c.addCommand, c);
+		this.replaceLastCommand = _.bind(c.replaceLastCommand, c);
+		this.clearLastCommand = _.bind(c.clearLastCommand, c);
+		this.highlightLayer = _.bind(c.highlightLayer, c);
+		this.getSaveObj = _.bind(c.getSaveObj, c);
+		this.setSaveObj = _.bind(c.setSaveObj, c);
+		this.undo = _.bind(c.undo, c);
+		this.redo = _.bind(c.redo, c);
 	};
 
 	var p = BigRender.prototype;

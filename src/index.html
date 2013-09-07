@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>DotProgress</title>
 
-	<!-- build:css styles/dot.css -->
-	<!-- endbuild -->
+	<title>BigRender</title>
 
 	<script src="//cdnjs.cloudflare.com/ajax/libs/EaselJS/0.6.1/easeljs.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore.js"></script>
-	<script src="http://codeorigin.jquery.com/jquery-1.10.2.js"></script>
-	<!-- build:js scripts/dotProgress.js -->
-	<script src="scripts/constants.js"></script>
-	<script src="utils/CommandDispatcher.js"></script>
 
+	<!-- build:js scripts/bigRender.js -->
 	<script src="scripts/controller/CompositionController.js"></script>
 	<script src="scripts/controller/LayerManager.js"></script>
 
 	<script src="scripts/model/CompositionModel.js"></script>
 	<script src="scripts/model/LayerModel.js"></script>
 
+	<script src="scripts/utils/CommandDispatcher.js"></script>
+	<script src="scripts/utils/Queue.js"></script>
+	<script src="scripts/utils/Task.js"></script>
+
 	<script src="scripts/view/CompositionView.js"></script>
 	<script src="scripts/view/LayerBitmapView.js"></script>
 	<script src="scripts/view/LayerObjectView.js"></script>
 	<script src="scripts/view/LayerView.js"></script>
+
+	<script src="scripts/BigRender.js"></script>
+	<script src="scripts/constants.js"></script>
 	<!-- endbuild -->
+
 </head>
 
 
 <body>
-	<p>Draw 3 Lines</p>
-	<div id="holder"></div>
-	<br>
+
+	<canvas id="demo-canvas"></canvas>
 
 	<script>
-		var holder = document.getElementById('holder');
-		var bigRender = new bigRender.BigRender(holder);
+		var canvas = document.getElementById('demo-canvas');
+		var r = new bigRender.BigRender(canvas);
+		r.addCommand({type:bigRender.command.DRAW_LINE, path:[0,0,50,50,100,60]});
 	</script>
 
 </body>

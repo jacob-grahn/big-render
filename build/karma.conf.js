@@ -17,7 +17,6 @@ module.exports = function(config) {
 			'../lib/easeljs-0.6.1.min.js',
 			'../lib/sinon-1.7.3.js',
 			'../lib/underscore.js',
-			'../lib/jquery-1.10.2.js',
 			'../src/scripts/**/*.js',
 			'../test/unit/**/*.js'
     ],
