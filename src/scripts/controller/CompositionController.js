@@ -1,3 +1,5 @@
+/* CompositionController extends CommandChainController */
+
 var bigRender = bigRender || {};
 
 (function() {
@@ -5,41 +7,14 @@ var bigRender = bigRender || {};
 
 
 	var CompositionController = function(compositionModel) {
+		//super
+		bigRender.CommandChainController.call(this, compositionModel);
+
 		this.model = compositionModel;
-		this.commandDispatcher = new bigRender.CommandDispatcher(compositionModel, null);
 		this.layerManager = new bigRender.LayerManager(compositionModel, this.commandDispatcher);
 	};
 
-	var p = CompositionController.prototype;
-
-
-	p.addCommand = function(command) {
-		var model = this.model;
-		if(model.commands.length > model.targetCommandPos) {
-			model.commands.slice(0, model.targetCommandPos);
-		}
-		if(model.commands.length === model.targetCommandPos) {
-			model.targetCommandPos++;
-		}
-		model.commands.push(command);
-		this.commandDispatcher.start();
-	};
-
-
-	p.replaceLastCommand = function(command) {
-		this.clearLastCommand();
-		this.addCommand(command);
-	};
-
-
-	p.clearLastCommand = function() {
-		var model = this.model;
-		if(model.commands.length > 0) {
-			model.targetCommandPos--;
-			this.commandDispatcher.start();
-			model.commands.pop();
-		}
-	};
+	var p = CompositionController.prototype = bigRender.CommandChainController.prototype;
 
 
 	p.highlightLayer = function(layer) {
@@ -51,7 +26,7 @@ var bigRender = bigRender || {};
 		var model = this.model;
 
 		var saveObj = {};
-		saveObj.v = 5;
+		saveObj.version = 5;
 		saveObj.data = model.data;
 		saveObj.layers = [];
 		saveObj.width = model.width;
@@ -97,16 +72,17 @@ var bigRender = bigRender || {};
 	};
 
 
+	p.CommandChainControllerClear = p.clear;
 	p.clear = function() {
+		this.CommandChainControllerClear();
 		this.commandDispatcher.clear();
 		this.model.restoreDefaults();
 	};
 
 
+	p.CommandChainControllerRemove = p.remove;
 	p.remove = function() {
-		this.commandDispatcher.remove();
-		this.commandDispatcher = null;
-
+		this.CommandChainControllerRemove();
 		this.layerManager.remove();
 		this.layerManager = null;
 	};

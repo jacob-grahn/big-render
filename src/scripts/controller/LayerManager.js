@@ -1,3 +1,4 @@
+/* */
 /* global _ */
 
 var bigRender = bigRender || {};
@@ -6,8 +7,8 @@ var bigRender = bigRender || {};
 	'use strict';
 
 
-	var LayerManager = function(model, commandDispatcher) {
-		this.model = model;
+	var LayerManager = function(compositionModel, commandDispatcher) {
+		this.model = compositionModel;
 		this.commandDispatcher = commandDispatcher;
 		_.bindAll(this, '_doCreateLayer', '_undoCreateLayer', '_doDeleteLayer', '_undoDeleteLayer', '_doEditLayer', '_undoEditLayer');
 		this._createListeners();

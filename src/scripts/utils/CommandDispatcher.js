@@ -46,6 +46,12 @@ var bigRender = bigRender || {};
 	};
 
 
+	p.dispatchCommand = function(command, action) {
+		var type = command.type + action;
+		this.dispatchEvent( {type: type, command:command} );
+	};
+
+
 	p.clear = function() {
 		this.stop();
 		this.commandPos = 0;
@@ -64,8 +70,7 @@ var bigRender = bigRender || {};
 
 	p._dispatchCurrentCommand = function(action) {
 		var command = this.model.commands[this.commandPos];
-		var type = command.type + action;
-		this.dispatchEvent( {type: type, command:command} );
+		this.dispatchCommand(command, action);
 	};
 
 

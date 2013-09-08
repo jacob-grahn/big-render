@@ -6,19 +6,44 @@ var bigRender = bigRender || {};
 	'use strict';
 
 
-	var LayerBitmapView = function(canvas, commandDispatcher) {
-		createjs.Bitmap.call(this, canvas);
+	var LayerBitmapView = function(commandDispatcher, width, height) {
+		this.canvas = document.createElement('canvas');
+		this.ctx = this.canvas.getContext('2d');
 		this.commandDispatcher = commandDispatcher;
-		this._restoreDefaults();
+
+		createjs.Bitmap.call(this, this.canvas); //super
+
 		_.bindAll(this, '_doDrawImage', '_doDrawLine', '_doDrawShape', '_doEraseRect', '_doMoveRect', '_redraw');
 		this._addListeners();
+		this._restoreDefaults();
+		this.setDimensions(width, height);
 	};
 
 	var p = LayerBitmapView.prototype = new createjs.Bitmap();
 
 
+	p.setDimensions = function(width, height) {
+		if(width !== this.canvas.width || height !== this.canvas.height) {
+			this.canvas.width = width;
+			this.canvas.height = height;
+			this._redraw(null);
+		}
+	};
+
+
+	p.clear = function() {
+		this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.commandDispatcher.clear();
+	};
+
+
 	p.remove = function() {
+		this.clear();
 		this._removeListeners();
+		this.canvas = null;
+		this.ctx = null;
+		this.commandDispatcher = null;
 	};
 
 
@@ -31,7 +56,7 @@ var bigRender = bigRender || {};
 
 		this.lineColor = '#123456';
 		this.lineOpacity = 100;
-		this.lineThickness = 3;
+		this.lineWidth = 3;
 
 		this.shape = bigRender.shape.RECTANGLE;
 		this.rotation = 0;
@@ -113,8 +138,8 @@ var bigRender = bigRender || {};
 		this.lineThickness = c.lineThickness || this.lineThickness;
 
 		if(this.lineTool === Commands.TOOL_PENCIL) {
-			x -= .5;
-			y -= .5;
+			x -= 0.5;
+			y -= 0.5;
 			this.ctx.mozImageSmoothingEnabled = false;
 		}
 

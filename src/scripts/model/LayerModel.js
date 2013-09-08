@@ -1,3 +1,4 @@
+/* LayerModel extends CommandChainModel */
 /* global createjs */
 
 var bigRender = bigRender || {};
@@ -7,8 +8,6 @@ var bigRender = bigRender || {};
 
 
 	var LayerModel = function() {
-		this.commands = [];
-		this.commandPos = 0;
 		this.layerId = null;
 		this.name = 'Layer';
 		this.zIndex = 0;
@@ -18,8 +17,7 @@ var bigRender = bigRender || {};
 		this.active = true;
 	};
 
-	var p = LayerModel.prototype;
-	createjs.EventDispatcher.initialize(p);
+	var p = LayerModel.prototype = bigRender.CommandChainModel.prototype;
 
 
 	p.setOptions = function(obj) {
