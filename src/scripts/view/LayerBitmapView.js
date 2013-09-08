@@ -15,7 +15,6 @@ var bigRender = bigRender || {};
 
 		_.bindAll(this, '_doDrawImage', '_doDrawLine', '_doDrawShape', '_doEraseRect', '_doMoveRect', '_redraw');
 		this._addListeners();
-		this._restoreDefaults();
 		this.setDimensions(width, height);
 	};
 
@@ -44,22 +43,6 @@ var bigRender = bigRender || {};
 		this.canvas = null;
 		this.ctx = null;
 		this.commandDispatcher = null;
-	};
-
-
-	p._restoreDefaults = function() {
-		this.brush = bigRender.brush.SMOOTH;
-		this.blendMode = bigRender.blendMode.NORMAL;
-
-		this.fillColor = '#343434';
-		this.fillOpacity = 100;
-
-		this.lineColor = '#123456';
-		this.lineOpacity = 100;
-		this.lineWidth = 3;
-
-		this.shape = bigRender.shape.RECTANGLE;
-		this.rotation = 0;
 	};
 
 
@@ -129,9 +112,44 @@ var bigRender = bigRender || {};
 	};
 
 
-	p._doDrawLine = function(e) {
+	p._doStroke = function(e) {
 		var c = e.command;
 		var path = c.path;
+		var brush = c.brush || 'line';
+		var lineCap = c.lineCap || 'round';
+		var lineJoin = c.lineJoin || 'round';
+		var lineWidth = c.lineWidth || 3;
+		var strokeStyle = c.strokeStyle || '#000000';
+	};
+
+
+	p._undoStroke = function(e) {
+
+	};
+
+
+	p._doDrawLine = function(e) {
+
+
+
+		ctx.lineCap = 'round';
+		ctx.lineJoin = 'round';
+		ctx.lineWidth = 5;
+		ctx.strokeStyle = '#123456';
+
+
+		this.brush = bigRender.brush.SMOOTH;
+		this.blendMode = bigRender.blendMode.NORMAL;
+
+		this.fillColor = '#343434';
+		this.fillOpacity = 100;
+
+		this.lineColor = '#123456';
+		this.lineOpacity = 100;
+		this.lineWidth = 3;
+
+		this.shape = bigRender.shape.RECTANGLE;
+		this.rotation = 0;
 
 		this.lineColor = c.lineColor || this.lineColor;
 		this.lineOpacity = c.lineOpacity || this.lineOpacity;
