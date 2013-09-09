@@ -53,7 +53,9 @@ bigRender.option = {
 };
 
 bigRender.brush = {
-	SMOOTH: 'smooth',
+	LINE: 'line',
+	IMAGE: 'image',
+	SHAPE: 'shape',
 	PIXEL: 'pixel'
 };
 
