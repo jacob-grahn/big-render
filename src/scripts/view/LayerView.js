@@ -6,11 +6,11 @@ var bigRender = bigRender || {};
 
 
 	// @extends createjs.Container
-	var LayerView = function(layer, queue, width, height) {
+	var LayerView = function(layerModel, queue, width, height) {
 		createjs.Container.call(this); //super
 
-		this.layer = layer;
-		this.commandDispatcher = new bigRender.CommandDispatcher(layer, queue);
+		this.layerModel = layerModel;
+		this.commandDispatcher = new bigRender.CommandDispatcher(layerModel, queue);
 
 		this.bitmap = new bigRender.LayerBitmapView(this.commandDispatcher, width, height);
 		this.objectHolder = new bigRender.LayerObjectView(this.commandDispatcher);
@@ -21,6 +21,10 @@ var bigRender = bigRender || {};
 
 	var p = LayerView.prototype = new createjs.Container();
 
+
+	p.setDisplayOpacity = function(num) {
+		this.opacity = num * this.layerModel.opacity;
+	};
 
 
 	p._addListeners = function() {

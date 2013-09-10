@@ -9,7 +9,7 @@ var bigRender = bigRender || {};
 	var CompositionModel = function() {
 		//super
 		bigRender.CommandChainModel.call(this);
-
+		//
 		this.layers = [];
 		this.targetLayer = null;
 		this.highlightLayer = null;

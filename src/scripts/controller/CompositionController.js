@@ -12,6 +12,7 @@ var bigRender = bigRender || {};
 
 		this.model = compositionModel;
 		this.layerManager = new bigRender.LayerManager(compositionModel, this.commandDispatcher);
+		this.layerForwarder = new bigRender.LayerForwarder(compositionModel, this.commandDispatcher);
 	};
 
 	var p = CompositionController.prototype = bigRender.CommandChainController.prototype;
@@ -60,6 +61,7 @@ var bigRender = bigRender || {};
 		if(this.model.targetCommandPos > 0) {
 			this.model.targetCommandPos--;
 			this.commandDispatcher.start();
+
 		}
 	};
 
@@ -83,8 +85,12 @@ var bigRender = bigRender || {};
 	p.CommandChainControllerRemove = p.remove;
 	p.remove = function() {
 		this.CommandChainControllerRemove();
+
 		this.layerManager.remove();
 		this.layerManager = null;
+
+		this.layerForwarder.remove();
+		this.layerForwarder = null;
 	};
 
 

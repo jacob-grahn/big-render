@@ -21,6 +21,9 @@ var bigRender = bigRender || {};
 		var layer = new bigRender.LayerModel();
 		layer.layerId = layerId || this.model.nextLayerId++;
 		this.model.addLayer(layer);
+		if(!this.model.targetLayer) {
+			this.model.setTargetLayer(layer);
+		}
 		return(layer);
 	};
 
@@ -36,11 +39,17 @@ var bigRender = bigRender || {};
 		var c = this.commandDispatcher;
 		c.addEventListener(bigRender.command.CREATE_LAYER + 'Do', this._doCreateLayer);
 		c.addEventListener(bigRender.command.CREATE_LAYER + 'Undo', this._undoCreateLayer);
+
 		c.addEventListener(bigRender.command.DELETE_LAYER + 'Do', this._doDeleteLayer);
 		c.addEventListener(bigRender.command.DELETE_LAYER + 'Undo', this._undoDeleteLayer);
+
 		c.addEventListener(bigRender.command.EDIT_LAYER + 'Do', this._doEditLayer);
 		c.addEventListener(bigRender.command.EDIT_LAYER + 'Undo', this._undoEditLayer);
+
+
 	};
+
+
 
 
 	p._removeListeners = function() {

@@ -5,16 +5,35 @@ var bigRender = bigRender || {};
 (function() {
 	'use strict';
 
+
 	var CommandDispatcher = function(model, queue) {
 		this.model = model;
 		this.queue = queue;
 		this.commandPos = 0;
 		this.removed = false;
 		this.processing = false;
+
+		_.bindAll(this, '_commandPosChangedHandler');
+		this._addListeners();
 	};
 
 	var p = CommandDispatcher.prototype;
 	createjs.EventDispatcher.initialize(p);
+
+
+	p._addListeners = function() {
+		this.model.addEventListener(bigRender.event.COMMAND_POS_CHANGED, this._commandPosChangedHandler);
+	};
+
+
+	p._removeListeners = function() {
+		this.model.removeEventListener(bigRender.event.COMMAND_POS_CHANGED, this._commandPosChangedHandler);
+	};
+
+
+	p._commandPosChangedHandler = function(e) {
+		this.start();
+	};
 
 
 	p.start = function() {

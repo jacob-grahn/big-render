@@ -8,6 +8,9 @@ var bigRender = bigRender || {};
 
 
 	var LayerModel = function() {
+		//super
+		bigRender.CommandChainModel.call(this);
+		//
 		this.layerId = null;
 		this.name = 'Layer';
 		this.zIndex = 0;

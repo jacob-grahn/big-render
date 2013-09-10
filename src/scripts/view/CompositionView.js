@@ -1,4 +1,5 @@
-/* global createjs */
+/* global createjs, _*/
+
 var bigRender = bigRender || {};
 
 (function(){
@@ -7,11 +8,14 @@ var bigRender = bigRender || {};
 
 	var CompositionView = function(canvas, model, queue) {
 		this.model = model;
+		this.width = model.width;
+		this.height = model.height;
 		this.queue = queue;
 		this.canvas = canvas;
 		this.stage = new createjs.Stage(this.canvas);
 		this.layers = [];
 
+		_.bindAll(this, '_tickHandler', '_targetLayerChangedHandler', '_highlightLayerChangedHandler', '_layerAddedHandler', '_layerRemovedHandler', '_layerChangedHandler', '_commandPosChangedHandler', '_scrollChangedHandler');
 		this._addListeners();
 	};
 
@@ -20,6 +24,7 @@ var bigRender = bigRender || {};
 
 	p._addListeners = function() {
 		var m = this.model;
+		createjs.Ticker.addEventListener('tick', this._tickHandler);
 		m.addEventListener(bigRender.event.TARGET_LAYER_CHANGED, this._targetLayerChangedHandler);
 		m.addEventListener(bigRender.event.HIGHLIGHT_LAYER_CHANGED, this._highlightLayerChangedHandler);
 		m.addEventListener(bigRender.event.LAYER_ADDED, this._layerAddedHandler);
@@ -32,6 +37,7 @@ var bigRender = bigRender || {};
 
 	p._removeListeners = function() {
 		var m = this.model;
+		createjs.Ticker.removeEventListener('tick', this._tickHandler);
 		m.removeEventListener(bigRender.event.TARGET_LAYER_CHANGED, this._targetLayerChangedHandler);
 		m.removeEventListener(bigRender.event.HIGHLIGHT_LAYER_CHANGED, this._highlightLayerChangedHandler);
 		m.removeEventListener(bigRender.event.LAYER_ADDED, this._layerAddedHandler);
@@ -39,6 +45,11 @@ var bigRender = bigRender || {};
 		m.removeEventListener(bigRender.event.LAYER_CHANGED, this._layerChangedHandler);
 		m.removeEventListener(bigRender.event.COMMAND_POS_CHANGED, this._commandPosChangedHandler);
 		m.removeEventListener(bigRender.event.SCROLL_CHANGED, this._scrollChangedHandler);
+	};
+
+
+	p._tickHandler = function(e) {
+		this.stage.update();
 	};
 
 
@@ -54,10 +65,10 @@ var bigRender = bigRender || {};
 		if(hLayer) {
 			_.each(this.layers, function(layerView){
 				if(layerView.layerModel === hLayer) {
-					layerView.setModOpacity(1);
+					layerView.setDisplayOpacity(1);
 				}
 				else {
-					layerView.setModOpacity(.5);
+					layerView.setDisplayOpacity(0.5);
 				}
 			});
 		}
@@ -65,14 +76,14 @@ var bigRender = bigRender || {};
 		//otherwise return all opacity to normal
 		else {
 			_.each(this.layers, function(layerView) {
-				layerView.setModOpacity(1);
+				layerView.setDisplayOpacity(1);
 			});
 		}
 	};
 
 
 	p._layerAddedHandler = function(e) {
-		var layerView = new bigRender.LayerView(this.model, e.command.layerId);
+		var layerView = new bigRender.LayerView(e.layer, this.queue, this.width, this.height);
 		this.stage.addChild(layerView);
 		this.layers.push(layerView);
 		this._sortLayers();
@@ -90,9 +101,14 @@ var bigRender = bigRender || {};
 
 
 
-	p._layerChangedHandler = function(e) {};
-	p._commandPosChangedHandler = function(e) {};
+	p._layerChangedHandler = function(e) {
 
+	};
+
+
+	p._commandPosChangedHandler = function(e) {
+
+	};
 
 
 	p._scrollChangedHandler = function(e) {
@@ -109,7 +125,7 @@ var bigRender = bigRender || {};
 		});
 		for(var i=0; i<this.layers.length; i++) {
 			var layerView = this.layers[i];
-			layerView.setDepth(i);
+			this.stage.addChild(layerView);
 		}
 	};
 
