@@ -14,6 +14,7 @@ var bigRender = bigRender || {};
 		this.targetLayer = null;
 		this.highlightLayer = null;
 		this.nextLayerId = 1;
+		this.nextObjectId = 1;
 		this.data = {};
 		this.scrollX = 0;
 		this.scrollY = 0;
