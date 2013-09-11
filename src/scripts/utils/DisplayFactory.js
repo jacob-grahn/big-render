@@ -13,12 +13,12 @@ var bigRender = bigRender || {};
 	var p = DisplayFactory.prototype;
 
 
-	p.make = function(imgUrl) {
-		var img = this.images[imgUrl];
+	p.make = function(src) {
+		var img = this.images[src];
 		if(!img) {
-			img = document.createElement('image');
-			img.src = imgUrl;
-			this.images[imgUrl] = img;
+			img = document.createElement('img');
+			img.setAttribute('src', src);
+			this.images[src] = img;
 		}
 
 		var bitmap = new createjs.Bitmap(img);
@@ -31,5 +31,5 @@ var bigRender = bigRender || {};
 	};
 
 
-	bigRender.DisplayFactory = DisplayFactory;
+	bigRender.DisplayFactory = new DisplayFactory();
 }());

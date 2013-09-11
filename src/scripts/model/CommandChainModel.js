@@ -7,12 +7,17 @@ var bigRender = bigRender || {};
 
 
 	var CommandChainModel = function() {
-		this.commands = [];
-		this.targetCommandPos = 0;
+		this.clear();
 	};
 
 	var p = CommandChainModel.prototype;
 	createjs.EventDispatcher.initialize(p);
+
+
+	p.clear = function() {
+		this.commands = [];
+		this.targetCommandPos = 0;
+	};
 
 
 	p.setTargetCommandPos = function(targetCommandPos) {

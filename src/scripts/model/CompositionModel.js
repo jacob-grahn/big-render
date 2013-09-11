@@ -10,6 +10,15 @@ var bigRender = bigRender || {};
 		//super
 		bigRender.CommandChainModel.call(this);
 		//
+		this.clear();
+	};
+
+	var p = CompositionModel.prototype = bigRender.CommandChainModel.prototype;
+
+
+	p.CommandChainModelClear = p.clear;
+	p.clear = function() {
+		this.CommandChainModelClear();
 		this.layers = [];
 		this.targetLayer = null;
 		this.highlightLayer = null;
@@ -21,8 +30,6 @@ var bigRender = bigRender || {};
 		this.width = 200;
 		this.height = 200;
 	};
-
-	var p = CompositionModel.prototype = bigRender.CommandChainModel.prototype;
 
 
 	p.setDimensions = function(w, h) {

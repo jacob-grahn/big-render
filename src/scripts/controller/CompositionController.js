@@ -59,17 +59,14 @@ var bigRender = bigRender || {};
 
 	p.undo = function() {
 		if(this.model.targetCommandPos > 0) {
-			this.model.targetCommandPos--;
-			this.commandDispatcher.start();
-
+			this.model.setTargetCommandPos(this.model.targetCommandPos - 1);
 		}
 	};
 
 
 	p.redo = function() {
 		if(this.model.targetCommandPos < this.model.commands.length) {
-			this.model.targetCommandPos++;
-			this.commandDispatcher.start();
+			this.model.setTargetCommandPos(this.model.targetCommandPos + 1);
 		}
 	};
 
@@ -78,7 +75,7 @@ var bigRender = bigRender || {};
 	p.clear = function() {
 		this.CommandChainControllerClear();
 		this.commandDispatcher.clear();
-		this.model.restoreDefaults();
+		this.model.clear();
 	};
 
 

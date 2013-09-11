@@ -49,29 +49,59 @@ var bigRender = bigRender || {};
 
 	p._doAddObjectHandler = function(e) {
 		var command = e.command;
-		var displayObject = command.displayObject;
-		var objectId = displayObject.objectId || command.objectId || this.nextObjectId++;
-		displayObject.objectId = e.command.objectId = objectId;
+		var src = command.src;
+		var objectId = command.id || command.objectId || this.nextObjectId++;
+		var displayObject = bigRender.DisplayFactory.make(src);
+
+		displayObject.objectId = command.objectId = objectId;
 
 		this.lookup[objectId] = displayObject;
 		this.addChild(displayObject);
-		this._positionObject(e.command, displayObject);
+		this._positionObject(command, displayObject);
 	};
 
 
-	p._undoAddObjectHandler = function() {};
+	p._undoAddObjectHandler = function(e) {
+		var displayObject = this.lookup[e.command.objectId];
+		if(displayObject) {
+			this.removeChild(displayObject);
+			delete this.lookup[e.command.objectId];
+		}
+	};
 
 
-	p._doMoveObjectHandler = function() {};
+	p._doMoveObjectHandler = function(e) {
+		var displayObject = this.lookup[e.command.objectId];
+		if(displayObject) {
+			e.command.restore = this._copyObjectPosition(displayObject);
+			this._positionObject(e.command, displayObject);
+		}
+	};
 
 
-	p._undoMoveObjectHandler = function() {};
+	p._undoMoveObjectHandler = function(e) {
+		var displayObject = this.lookup[e.command.objectId];
+		if(displayObject) {
+			console.log(e.command);
+			this._positionObject(e.command.restore, displayObject);
+		}
+	};
 
 
-	p._doRemoveObjectHandler = function() {};
+	p._doRemoveObjectHandler = function(e) {
+		var displayObject = this.lookup[e.command.objectId];
+		if(displayObject) {
+			this.removeChild(displayObject);
+		}
+	};
 
 
-	p._undoRemoveObjectHandler = function() {};
+	p._undoRemoveObjectHandler = function(e) {
+		var displayObject = this.lookup[e.command.objectId];
+		if(displayObject) {
+			this.addChild(displayObject);
+		}
+	};
 
 
 	p._positionObject = function(command, displayObject) {
@@ -84,7 +114,22 @@ var bigRender = bigRender || {};
 			d.rotation = command.rotation || d.rotation;
 			d.alpha = command.alpha || d.alpha;
 			d.skewX = command.skewX || d.skewX;
+			d.skewY = command.skewY || d.skewY;
 		}
+	};
+
+
+	p._copyObjectPosition = function(object) {
+		var ret = {};
+		ret.x = object.x;
+		ret.y = object.y;
+		ret.scaleX = object.scaleX;
+		ret.scaleY = object.scaleY;
+		ret.rotation = object.rotation;
+		ret.alpha = object.alpha;
+		ret.skewX = object.skewX;
+		ret.skewY = object.skewY;
+		return(ret);
 	};
 
 
