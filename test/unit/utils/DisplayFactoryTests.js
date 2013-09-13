@@ -5,12 +5,7 @@
 
 
 	describe('DisplayFactory', function() {
-		var df;
-
-
-		beforeEach(function() {
-			df = new bigRender.DisplayFactory();
-		});
+		var df = bigRender.DisplayFactory;
 
 
 		it('should create a DisplayObject', function() {
