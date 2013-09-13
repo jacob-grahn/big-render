@@ -9,7 +9,7 @@ var bigRender = bigRender || {};
 	var CompositionController = function(compositionModel) {
 		//super
 		bigRender.CommandChainController.call(this, compositionModel);
-
+		//
 		this.model = compositionModel;
 		this.layerManager = new bigRender.LayerManager(compositionModel, this.commandDispatcher);
 		this.layerForwarder = new bigRender.LayerForwarder(compositionModel, this.commandDispatcher);

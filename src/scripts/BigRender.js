@@ -21,7 +21,6 @@ var bigRender = bigRender || {};
 		this.setSaveObj = _.bind(c.setSaveObj, c);
 		this.undo = _.bind(c.undo, c);
 		this.redo = _.bind(c.redo, c);
-		this.clear = _.bind(c.clear, c);
 	};
 
 	var p = BigRender.prototype;
@@ -31,6 +30,13 @@ var bigRender = bigRender || {};
 		this.view.canvas.width = w;
 		this.view.canvas.height = h;
 	};
+
+
+	p.clear = function() {
+		this.model.clear();
+		this.view.clear();
+		this.controller.clear();
+	}
 
 
 	p.remove = function() {

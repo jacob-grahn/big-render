@@ -45,8 +45,6 @@ var bigRender = bigRender || {};
 
 		c.addEventListener(bigRender.command.EDIT_LAYER + 'Do', this._doEditLayer);
 		c.addEventListener(bigRender.command.EDIT_LAYER + 'Undo', this._undoEditLayer);
-
-
 	};
 
 

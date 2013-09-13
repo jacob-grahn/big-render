@@ -13,6 +13,7 @@ var bigRender = bigRender || {};
 		this.queue = queue;
 		this.canvas = canvas;
 		this.stage = new createjs.Stage(this.canvas);
+		this.stage.autoClear = true;
 		this.layers = [];
 
 		_.bindAll(this, '_tickHandler', '_targetLayerChangedHandler', '_highlightLayerChangedHandler', '_layerAddedHandler', '_layerRemovedHandler', '_layerChangedHandler', '_commandPosChangedHandler', '_scrollChangedHandler');
@@ -127,6 +128,12 @@ var bigRender = bigRender || {};
 			var layerView = this.layers[i];
 			this.stage.addChild(layerView);
 		}
+	};
+
+
+	p.clear = function()  {
+		this.stage.removeAllChildren();
+		this.layers = [];
 	};
 
 

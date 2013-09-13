@@ -13,7 +13,6 @@ var bigRender = bigRender || {};
 
 
 	p.addCommand = function(command) {
-		console.log('addCommand', command);
 		var model = this.commandChainModel;
 		if(model.commands.length > model.targetCommandPos) {
 			model.commands.splice(0, model.targetCommandPos-1);

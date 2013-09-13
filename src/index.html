@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
 
 	<title>BigRender</title>
@@ -36,8 +36,13 @@
 </head>
 
 
-<body>
+<body style="background-color:lightgray">
 
+	<a href="javascript:drawTest();">Draw Test</a>
+	<a href="javascript:objTest();">Object Test</a>
+	<br>
+	<br>
+	<h1 id="title"></h1>
 	<canvas id="demo-canvas"></canvas>
 
 	<script>
@@ -45,8 +50,13 @@
 		var r = new bigRender.BigRender(canvas);
 		r.setDimensions(200, 200);
 
+		function setTitle(str) {
+			document.getElementById('title').innerHTML = str;
+		}
+
 		//draw test
-		var drawTest = function() {
+		function drawTest() {
+			setTitle('Draw Test');
 			r.clear();
 			r.addCommand({type: bigRender.command.CREATE_LAYER});
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,0,50,50,100,60], lineWidth: 5, strokeStyle: '#00FF00'});
@@ -54,17 +64,14 @@
 		};
 
 		//object draw test
-		var objTest = function() {
+		function objTest() {
+			setTitle('Object Test');
 			r.clear();
 			r.addCommand({type: bigRender.command.CREATE_LAYER});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src:'img/tree.jpeg', objectId:1});
-			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId:1, x: 5, y: 6, rotation:-11});
-			r.undo();
-			r.undo();
-			r.redo();
-			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId:1, scaleX: .5, scaleY:.25});
-			r.addCommand({type: bigRender.command.REMOVE_OBJECT, objectId: 1});
-			r.undo();
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 1});
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 2, scaleX: 0.1, scaleY: 0.1});
+			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 1, x: 100, y: 150, rotation: 180});
+			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 1, scaleX: 0.5, scaleY: 0.25});
 		};
 
 		objTest();

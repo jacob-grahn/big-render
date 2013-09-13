@@ -82,7 +82,6 @@ var bigRender = bigRender || {};
 	p._undoMoveObjectHandler = function(e) {
 		var displayObject = this.lookup[e.command.objectId];
 		if(displayObject) {
-			console.log(e.command);
 			this._positionObject(e.command.restore, displayObject);
 		}
 	};

@@ -67,7 +67,6 @@ var bigRender = bigRender || {};
 
 	p.dispatchCommand = function(command, action) {
 		var type = command.type + action;
-		console.log('CommandDispatcher::dispatchCommand', command, type);
 		this.dispatchEvent( {type: type, command:command} );
 	};
 
