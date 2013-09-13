@@ -61,7 +61,7 @@
 			r.addCommand({type: bigRender.command.CREATE_LAYER});
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,0,50,50,100,60], lineWidth: 5, strokeStyle: '#00FF00'});
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.ELLIPSE, x: 10, y: 10, width: 15, height: 25});
-		};
+		}
 
 		//object draw test
 		function objTest() {
@@ -72,7 +72,18 @@
 			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 2, scaleX: 0.1, scaleY: 0.1});
 			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 1, x: 100, y: 150, rotation: 180});
 			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 1, scaleX: 0.5, scaleY: 0.25});
-		};
+		}
+
+		//save test
+		function saveTest() {
+			setTitle('Save Test');
+			r.clear();
+			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId:1});
+			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId:2});
+			r.setTargetLayer(2);
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 10, y: 10, width: 50, height: 50});
+			r.addCommand({type: bigRender.command.MOVE_RECT, })
+		}
 
 		objTest();
 	</script>

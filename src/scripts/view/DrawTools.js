@@ -163,6 +163,50 @@ var bigRender = bigRender || {};
 	};
 
 
+	p.moveRect = function(command) {
+		this.applyCtxStyle(command);
+		var src = command.src;
+		var dest = command.dest;
+
+		var tempImg = this._copyRect(src);
+		this.drawRect(tempImg, dest.x, dest.y, dest.width, dest.height, dest.rotation, dest.scaleX, dest.scaleY);
+		this.ctx.clearRect(src.x, src.y, src.width, src.height);
+	};
+
+
+	p._copyRect = function(rect) {
+		var x = rect.x;
+		var y = rect.y;
+		var width = rect.width;
+		var height = rect.height;
+		var Maths = bigRender.Maths;
+
+		/*if( x > this.width || y > this.height || x + width < 0 || y + height < 0) {
+			throw new Error('ArtLayer::copyRect - invalid area');
+		}*/
+
+		x = Maths.limit(x, 0, this.width);
+		y = Maths.limit(y, 0, this.height);
+		width = Maths.limit(width, 1, this.width - x);
+		height = Maths.limit(height, 1, this.height - y);
+
+		var destCanvas = CanvasStore.checkout();
+		destCanvas.width = width;
+		destCanvas.height = height;
+
+		var destCtx = destCanvas.getContext('2d');
+		destCtx.drawImage(this.canvas, x, y, width, height, 0, 0, width, height);
+
+
+	};
+
+
+	p.deleteRect = function(command) {
+		var rect = command.rect;
+		this.ctx.clearRect(rect.x, rect.y, rect.width, rect.height);
+	};
+
+
 	p._drawEllipse = function(command) {
 		this.ctx.beginPath();
 		var x = command.x;

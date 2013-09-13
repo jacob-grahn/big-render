@@ -1,18 +1,30 @@
-var jigg = jigg || {};
+var bigRender = bigRender || {};
 
 (function() {
 	'use strict';
 
-	var maths = {};
+	var Maths = {};
 
-	maths.RAD_DEG = 180 / Math.PI;
-	maths.DEG_RAD =  Math.PI / 180;
+	Maths.RAD_DEG = 180 / Math.PI;
+	Maths.DEG_RAD =  Math.PI / 180;
 
-	maths.pythag = function(distX, distY) {
+
+	Maths.pythag = function(distX, distY) {
 		var distTot = Math.sqrt((distX*distX)+(distY*distY));
 		return(distTot);
-	}
+	};
 
-	jigg.maths = maths;
+
+	Maths.limit = function(num, min, max) {
+		if(num < min) {
+			num = min;
+		}
+		if(num > max) {
+			num = max;
+		}
+		return(num);
+	};
+
+	bigRender.Maths = Maths;
 
 }());
