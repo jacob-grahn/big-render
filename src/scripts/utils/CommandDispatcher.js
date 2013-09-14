@@ -13,7 +13,7 @@ var bigRender = bigRender || {};
 		this.removed = false;
 		this.processing = false;
 
-		_.bindAll(this, '_commandPosChangedHandler');
+		_.bindAll(this, '_commandPosChangedHandler', '_partiallyProcessCommands');
 		this._addListeners();
 	};
 
@@ -38,15 +38,12 @@ var bigRender = bigRender || {};
 
 	p.start = function() {
 		this.processing = true;
-		/*if(this.queue) {
-			if(!this.task) {
-				this.task = this.queue.doRecurring(this._doCommands.bind(this));
-			}
+		if(this.queue) {
+			this.task = this.task || this.queue.doRecurring(this._partiallyProcessCommands);
 		}
 		else {
-			this._processCommands(-1);
-		}*/
-		this._processCommands(-1);
+			this._processCommands();
+		}
 	};
 
 
@@ -94,40 +91,54 @@ var bigRender = bigRender || {};
 
 
 	p._dispatchProgress = function() {
-		var percentCompleted = this.model.targetCommandPos / this.commandPos;
-		this.dispatchEvent( {type: bigRender.event.PROGRESS, percentCompleted: percentCompleted } );
 
+		//dispatch 'progress' with completed percentage
+		var percentCompleted = this.model.targetCommandPos / this.commandPos;
+		this.dispatchEvent({type: bigRender.event.PROGRESS, percentCompleted: percentCompleted});
+
+		//dispatch 'complete' if all commands are done
 		if(this.commandPos === this.model.targetCommandPos) {
-			this.stop();
-			this.dispatchEvent( {type: bigRender.event.COMPLETE} );
+			this.dispatchEvent({type: bigRender.event.COMPLETE});
 		}
 	};
 
 
-	p._processCommands = function(maxTime) {
-		maxTime = maxTime || 20;
-		var model = this.model;
-		var startTime = new Date().getTime();
+	p._partiallyProcessCommands = function() {
+		var maxTime = 20;
+		var startTime = +new Date();
 		var elapsed = 0;
+		var done = false;
 
-		while(this.commandPos !== model.targetCommandPos) {
-			if(this.commandPos < model.targetCommandPos) {
+		while(elapsed < maxTime && !done) {
+			this._processCommands(10);
+			elapsed = +new Date() - startTime;
+			if(this.commandPos === this.model.targetCommandPos) {
+				done = true;
+			}
+		}
+
+		if(done) {
+			this.stop();
+		}
+	};
+
+
+	p._processCommands = function(maxCommands) {
+		maxCommands = maxCommands || Infinity;
+		var count = 0;
+
+		while(this.commandPos !== this.model.targetCommandPos) {
+			if(this.commandPos < this.model.targetCommandPos) {
 				this._doNextCommand();
 			}
 			else {
 				this._undoLastCommand();
 			}
 
-			if(maxTime !== -1 && this.commandPos % 5 === 0) {
-				elapsed = new Date().getTime() - startTime;
-				if(elapsed > maxTime) {
-					break;
-				}
+			count++;
+			if(count >= maxCommands) {
+				break;
 			}
-		}
-
-		if(this.commandPos === model.targetCommandPos) {
-			this.stop();
 		}
 
 		this._dispatchProgress();
@@ -147,4 +158,5 @@ var bigRender = bigRender || {};
 
 
 	bigRender.CommandDispatcher = CommandDispatcher;
+
 }());

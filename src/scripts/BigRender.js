@@ -7,6 +7,8 @@ var bigRender = bigRender || {};
 
 
 	var BigRender = function(canvas) {
+		this.width = canvas.width;
+		this.height = canvas.height;
 		this.queue = new bigRender.Queue();
 		this.model = new bigRender.CompositionModel();
 		this.controller = new bigRender.CompositionController(this.model);
@@ -29,6 +31,8 @@ var bigRender = bigRender || {};
 	p.setDimensions = function(w, h) {
 		this.view.canvas.width = w;
 		this.view.canvas.height = h;
+		this.width = w;
+		this.height = h;
 	};
 
 

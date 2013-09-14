@@ -40,8 +40,10 @@
 
 <body style="background-color:lightgray">
 
-	<a href="javascript:drawTest();">Draw Test</a>
-	<a href="javascript:objTest();">Object Test</a>
+	<a href="javascript:drawTest();">Draw Test</a> |
+	<a href="javascript:objTest();">Object Test</a> |
+	<a href="javascript:longDrawTest();">Long Draw Test</a> |
+	<a href="javascript:saveTest();">Save/Load Test</a>
 	<br>
 	<br>
 	<h1 id="title"></h1>
@@ -76,6 +78,22 @@
 			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 1, scaleX: 0.5, scaleY: 0.25});
 		}
 
+		//long draw test
+		function longDrawTest() {
+			setTitle('Long Draw Test');
+			r.clear();
+			r.addCommand({type: bigRender.command.CREATE_LAYER});
+			for(var i=0; i<10000; i++) {
+				var x1 = Math.random()* r.width;
+				var y1 = Math.random() * r.height;
+				var x2 = Math.random()* r.width;
+				var y2 = Math.random() * r.height;
+				//var color = Math.round(Math.random() * 0xFFFFFF);
+				//var hexColor = '#'+color.toString(16);
+				r.addCommand({type: bigRender.command.DRAW_LINE, path: [x1, y1, x2, y2], lineWidth: 1, strokeStyle: '#123456', globalAlpha: 0.25});
+			}
+		}
+
 		//save test
 		function saveTest() {
 			setTitle('Save Test');
@@ -87,7 +105,7 @@
 			r.addCommand({type: bigRender.command.MOVE_RECT, })
 		}
 
-		objTest();
+		longDrawTest();
 	</script>
 
 </body>
