@@ -44,7 +44,8 @@
 	<a href="javascript:objTest();">Object Test</a> |
 	<a href="javascript:longDrawTest();">Long Draw Test</a> |
 	<a href="javascript:saveTest();">Save/Load Test</a> |
-	<a href="javascript:pencilTest();">Pencil Test</a>
+	<a href="javascript:pencilTest();">Pencil Test</a> |
+	<a href="javascript:brushTest();">Brush Test</a>
 	<br>
 	<br>
 	<h1 id="title"></h1>
@@ -112,7 +113,17 @@
 			r.addCommand({type: bigRender.command.DRAW_LINE, brush: bigRender.brush.PIXEL, path: [75,89,210,345], width: 10, height: 2});
 		}
 
-		saveTest();
+
+		//brush test
+		function brushTest() {
+			setTitle('Brush Test');
+			r.clear();
+			r.addCommand({type: bigRender.command.CREATE_LAYER});
+			r.addCommand({type: bigRender.command.DRAW_LINE, brush: bigRender.brush.IMAGE, src: 'img/brush.png', scaleX: 0.5, scaleY: 0.5, path: [10,10,20,20,50,20,0,100,20,20,70,200], globalAlpha: 0.1});
+			r.addCommand({type: bigRender.command.DRAW_LINE, brush: bigRender.brush.IMAGE, src: 'img/brush.png', path: [75,89,210,345], rotation: 90, globalAlpha: 0.1});
+		}
+
+		brushTest();
 	</script>
 
 </body>

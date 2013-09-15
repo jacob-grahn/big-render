@@ -14,15 +14,20 @@ var bigRender = bigRender || {};
 
 
 	p.make = function(src) {
+		var img = this.makeImg(src);
+		var bitmap = new createjs.Bitmap(img);
+		return(bitmap);
+	};
+
+
+	p.makeImg = function(src) {
 		var img = this.images[src];
 		if(!img) {
 			img = document.createElement('img');
 			img.setAttribute('src', src);
 			this.images[src] = img;
 		}
-
-		var bitmap = new createjs.Bitmap(img);
-		return(bitmap);
+		return(img);
 	};
 
 
