@@ -1,4 +1,4 @@
-/* global jigg */
+/* global _ */
 
 var bigRender = bigRender || {};
 
@@ -8,6 +8,7 @@ var bigRender = bigRender || {};
 
 	var DrawTools = function(ctx) {
 		this.ctx = ctx;
+		_.bindAll(this, 'drawPixel');
 	};
 
 	var p = DrawTools.prototype;
@@ -30,23 +31,22 @@ var bigRender = bigRender || {};
 
 	p.drawLine = function(command) {
 		var brush = command.brush || 'line';
-
 		if(brush === bigRender.brush.LINE) {
-			this._drawStrokeLine(command);
+			this._drawStrokePath(command);
 		}
 		else if(command.brush === bigRender.brush.IMAGE) {
-			this._drawStepLine(command, this.drawImage);
+			this._drawStepPath(command, this.drawImage);
 		}
 		else if(command.brush === bigRender.brush.PIXEL) {
-			this._drawStepLine(command, this.drawPixel);
+			this._drawStepPath(command, this.drawPixel);
 		}
 		else if(command.brush === bigRender.brush.SHAPE) {
-			this._drawStepLine(command, this.drawShape);
+			this._drawStepPath(command, this.drawShape);
 		}
 	};
 
 
-	p._drawStrokeLine = function(command) {
+	p._drawStrokePath = function(command) {
 		var path = command.path;
 		var ctx = this.ctx;
 		var x;
@@ -69,7 +69,7 @@ var bigRender = bigRender || {};
 	};
 
 
-	p._drawStepLine = function(command, func) {
+	p._drawStepPath = function(command, func) {
 		var path = command.path;
 		var curX = path[0];
 		var curY = path[1];
@@ -79,19 +79,19 @@ var bigRender = bigRender || {};
 		for(var i=0; i<path.length; i+=2) {
 			nextX = path[i];
 			nextY = path[i+1];
-			this.stepThroughLine(curX, curY, nextX, nextY, func, command);
+			this._drawStepLine(curX, curY, nextX, nextY, func, command);
 			curX = nextX;
 			curY = nextY;
 		}
 	};
 
 
-	p.stepThroughLine = function(startX, startY, endX, endY, func, command) {
+	p._drawStepLine = function(startX, startY, endX, endY, func, command) {
 		var curX = startX;
 		var curY = startY;
 		var distX = endX - startX;
 		var distY = endY - startY;
-		var distTot = jigg.maths.pythag(distX, distY);
+		var distTot = bigRender.Maths.pythag(distX, distY);
 		var distTraveled = 0;
 		var stepX = distX / distTot;
 		var stepY = distY / distTot;
@@ -159,7 +159,9 @@ var bigRender = bigRender || {};
 		this.applyCtxStyle(command);
 		var x = command.x;
 		var y = command.y;
-		this.ctx.fillRect(x, y, 1, 1);
+		var width = command.width || 1;
+		var height = command.height || 1;
+		this.ctx.fillRect(x, y, width, height);
 	};
 
 

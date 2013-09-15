@@ -43,7 +43,8 @@
 	<a href="javascript:drawTest();">Draw Test</a> |
 	<a href="javascript:objTest();">Object Test</a> |
 	<a href="javascript:longDrawTest();">Long Draw Test</a> |
-	<a href="javascript:saveTest();">Save/Load Test</a>
+	<a href="javascript:saveTest();">Save/Load Test</a> |
+	<a href="javascript:pencilTest();">Pencil Test</a>
 	<br>
 	<br>
 	<h1 id="title"></h1>
@@ -88,8 +89,6 @@
 				var y1 = Math.random() * r.height;
 				var x2 = Math.random()* r.width;
 				var y2 = Math.random() * r.height;
-				//var color = Math.round(Math.random() * 0xFFFFFF);
-				//var hexColor = '#'+color.toString(16);
 				r.addCommand({type: bigRender.command.DRAW_LINE, path: [x1, y1, x2, y2], lineWidth: 1, strokeStyle: '#123456', globalAlpha: 0.25});
 			}
 		}
@@ -102,10 +101,18 @@
 			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId:2});
 			r.setTargetLayer(2);
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 10, y: 10, width: 50, height: 50});
-			r.addCommand({type: bigRender.command.MOVE_RECT, })
 		}
 
-		longDrawTest();
+		//pencil test
+		function pencilTest() {
+			setTitle('Pencil Test');
+			r.clear();
+			r.addCommand({type: bigRender.command.CREATE_LAYER});
+			r.addCommand({type: bigRender.command.DRAW_LINE, brush: bigRender.brush.PIXEL, path: [10,10,20,20,50,20,0,100,20,20,70,200]});
+			r.addCommand({type: bigRender.command.DRAW_LINE, brush: bigRender.brush.PIXEL, path: [75,89,210,345], width: 10, height: 2});
+		}
+
+		saveTest();
 	</script>
 
 </body>

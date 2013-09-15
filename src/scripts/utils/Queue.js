@@ -85,7 +85,13 @@ var bigRender = bigRender || {};
 
 			else {
 				this.i++;
-				task.run(startTime);
+				try {
+					task.run(startTime);
+				}
+				catch(error) {
+					task.done = true;
+					throw(error);
+				}
 			}
 
 			if(this.i % this.batchSize === 0 && this._getElapsed(startTime) > this.maxClogTime) {
