@@ -24,7 +24,6 @@ var bigRender = bigRender || {};
 		this.highlightLayer = null;
 		this.nextLayerId = 1;
 		this.nextObjectId = 1;
-		this.data = {};
 		this.scrollX = 0;
 		this.scrollY = 0;
 		this.width = 200;
@@ -36,12 +35,6 @@ var bigRender = bigRender || {};
 		this.width = w;
 		this.height = h;
 		this.dispatchEvent({type: bigRender.event.DIMENSIONS_CHANGED, width:w, height:h});
-	};
-
-
-	p.setData = function(data) {
-		this.data = data;
-		this.dispatchEvent({type: bigRender.event.DATA_CHANGED, data:data});
 	};
 
 
