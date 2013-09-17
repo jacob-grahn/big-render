@@ -4,8 +4,12 @@
 
 	<title>BigRender</title>
 
-	<script src="//cdnjs.cloudflare.com/ajax/libs/EaselJS/0.6.1/easeljs.min.js"></script>
+	<script src="http://code.createjs.com/createjs-2013.05.14.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore.js"></script>
+
+	<!-- build:js scripts/Color.js -->
+	<script src="scripts/Color.js"></script>
+	<!-- endbuild -->
 
 	<!-- build:js scripts/bigRender.js -->
 	<script src="scripts/controller/CommandChainController.js"></script>
@@ -25,8 +29,10 @@
 	<script src="scripts/utils/Queue.js"></script>
 	<script src="scripts/utils/Task.js"></script>
 
+	<script src="scripts/view/drawTools/DrawTools.js"></script>
+	<script src="scripts/view/drawTools/LineTools.js"></script>
+	<script src="scripts/view/drawTools/PixelTools.js"></script>
 	<script src="scripts/view/CompositionView.js"></script>
-	<script src="scripts/view/DrawTools.js"></script>
 	<script src="scripts/view/LayerBitmapView.js"></script>
 	<script src="scripts/view/LayerObjectView.js"></script>
 	<script src="scripts/view/LayerView.js"></script>
@@ -44,8 +50,6 @@
 	<a href="javascript:objTest();">Object Test</a> |
 	<a href="javascript:longDrawTest();">Long Draw Test</a> |
 	<a href="javascript:saveTest();">Save/Load Test</a> |
-	<a href="javascript:pencilTest();">Pencil Test</a> |
-	<a href="javascript:brushTest();">Brush Test</a>
 	<br>
 	<br>
 	<h1 id="title"></h1>
@@ -56,6 +60,20 @@
 		var r = new bigRender.BigRender(canvas);
 		r.setDimensions(200, 200);
 
+		var queue = new createjs.LoadQueue();
+		queue.addEventListener("complete", allLoadedHandler);
+		queue.loadManifest([
+			'img/brush.png',
+			'img/tree.jpeg'
+		]);
+
+
+		function allLoadedHandler() {
+			console.log('all loaded!');
+			drawTest();
+		}
+
+
 		function setTitle(str) {
 			document.getElementById('title').innerHTML = str;
 		}
@@ -65,8 +83,14 @@
 			setTitle('Draw Test');
 			r.clear();
 			r.addCommand({type: bigRender.command.CREATE_LAYER});
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,0,50,50,100,60], lineWidth: 5, strokeStyle: '#00FF00'});
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.ELLIPSE, x: 10, y: 10, width: 15, height: 25});
+			//draw a shape
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.TRIANGLE, x: 150, y: 20, width: 25, height: 25, stroke:false, fill:true, fillStyle: '#0000FF'});
+			//draw a line
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,50,75,5,100,45,200,75], lineWidth: 5, strokeStyle: '#00FF00'});
+			//draw a pixel line
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,75,75,30,100,70,200,100], brush: bigRender.brush.PIXEL, fillStyle: '#FF0000'});
+			//draw a line using an image
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,100,75,55,100,95,200,125], brush: bigRender.brush.IMAGE, src: 'img/brush.png', scaleX: 0.5, scaleY: 0.5, globalAlpha: 0.1});
 		}
 
 		//object draw test
@@ -103,27 +127,6 @@
 			r.setTargetLayer(2);
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 10, y: 10, width: 50, height: 50});
 		}
-
-		//pencil test
-		function pencilTest() {
-			setTitle('Pencil Test');
-			r.clear();
-			r.addCommand({type: bigRender.command.CREATE_LAYER});
-			r.addCommand({type: bigRender.command.DRAW_LINE, brush: bigRender.brush.PIXEL, path: [10,10,20,20,50,20,0,100,20,20,70,200]});
-			r.addCommand({type: bigRender.command.DRAW_LINE, brush: bigRender.brush.PIXEL, path: [75,89,210,345], width: 10, height: 2});
-		}
-
-
-		//brush test
-		function brushTest() {
-			setTitle('Brush Test');
-			r.clear();
-			r.addCommand({type: bigRender.command.CREATE_LAYER});
-			r.addCommand({type: bigRender.command.DRAW_LINE, brush: bigRender.brush.IMAGE, src: 'img/brush.png', scaleX: 0.5, scaleY: 0.5, path: [10,10,20,20,50,20,0,100,20,20,70,200], globalAlpha: 0.1});
-			r.addCommand({type: bigRender.command.DRAW_LINE, brush: bigRender.brush.IMAGE, src: 'img/brush.png', path: [75,89,210,345], rotation: 90, globalAlpha: 0.1});
-		}
-
-		brushTest();
 	</script>
 
 </body>

@@ -8,7 +8,7 @@ var bigRender = bigRender || {};
 
 	var DrawTools = function(ctx) {
 		this.ctx = ctx;
-		_.bindAll(this, 'drawPixel', 'drawImage', 'drawShape');
+		_.bindAll(this, 'drawPixel');
 	};
 
 	var p = DrawTools.prototype;
@@ -26,108 +26,68 @@ var bigRender = bigRender || {};
 		var translateX = command.translateX || 0;
 		var translateY = command.translateY || 0;
 
+		ctx.translate(translateX, translateY);
+		ctx.rotate(rotation * bigRender.Maths.DEG_RAD);
+		ctx.scale(scaleX, scaleY);
+
 		ctx.lineCap = command.lineCap || 'round';
 		ctx.lineJoin = command.lineJoin || 'round';
 		ctx.lineWidth = command.lineWidth || 3;
 		ctx.globalAlpha = command.globalAlpha || 1;
 		ctx.strokeStyle = command.strokeStyle || '#000000';
-		ctx.globalCompositeOperation = command.globalCompositeOperation || "source-over";
-		ctx.translate(translateX, translateY);
-		ctx.rotate(rotation * bigRender.Maths.DEG_RAD);
-		ctx.scale(scaleX, scaleY);
+		ctx.fillStyle = command.fillStyle || '#000000';
+		ctx.globalCompositeOperation = command.globalCompositeOperation || 'source-over';
 	};
 
 
 	p.drawLine = function(command) {
+		this.applyCtxStyle(command);
 		var brush = command.brush || 'line';
+		var LineTools = bigRender.LineTools;
+		var self = this;
+
 		if(brush === bigRender.brush.LINE) {
-			this._drawStrokePath(command);
+			LineTools.drawPathWithStrokes(this.ctx, command.path);
 		}
+
 		else if(command.brush === bigRender.brush.IMAGE) {
-			this._drawStepPath(command, this.drawImage);
+			LineTools.drawPathWidthSteps(command.path, function(x, y) {
+				command.translateX = x;
+				command.translateY = y;
+				self.drawImage(command);
+			});
 		}
+
 		else if(command.brush === bigRender.brush.PIXEL) {
-			this._drawStepPath(command, this.drawPixel);
+			LineTools.drawPathWidthSteps(command.path, function(x, y) {
+				command.x = x;
+				command.y = y;
+				self.drawPixel(command);
+			});
 		}
+
 		else if(command.brush === bigRender.brush.SHAPE) {
-			this._drawStepPath(command, this.drawShape);
-		}
-	};
-
-
-	p._drawStrokePath = function(command) {
-		var path = command.path;
-		var ctx = this.ctx;
-		var x;
-		var y;
-
-		this.applyCtxStyle(command, ctx);
-
-		ctx.beginPath();
-
-		for(var i=0; i<path.length; i+=2) {
-			x = path[i];
-			y = path[i+1];
-			ctx.lineTo(x, y);
-		}
-		if(path.length === 2) {
-			ctx.lineTo( x+0.1, y );
-		}
-
-		ctx.stroke();
-	};
-
-
-	p._drawStepPath = function(command, func) {
-		var path = command.path;
-		var curX = path[0];
-		var curY = path[1];
-		var nextX = 0;
-		var nextY = 0;
-
-		for(var i=0; i<path.length; i+=2) {
-			nextX = path[i];
-			nextY = path[i+1];
-			this._drawStepLine(curX, curY, nextX, nextY, func, command);
-			curX = nextX;
-			curY = nextY;
-		}
-	};
-
-
-	p._drawStepLine = function(startX, startY, endX, endY, func, command) {
-		var curX = startX;
-		var curY = startY;
-		var distX = endX - startX;
-		var distY = endY - startY;
-		var distTot = bigRender.Maths.pythag(distX, distY);
-		var distTraveled = 0;
-		var stepX = distX / distTot;
-		var stepY = distY / distTot;
-		while(distTraveled <= distTot) {
-			command.x = Math.round(curX);
-			command.y = Math.round(curY);
-			func(command);
-			curX += stepX;
-			curY += stepY;
-			distTraveled += 1;
+			LineTools.drawPathWidthSteps(command.path, function(x, y) {
+				command.x = x;
+				command.y = y;
+				self.drawShape(command);
+			});
 		}
 	};
 
 
 	p.drawImage = function(command) {
-		var src = command.src || 'you-did-not-provide-a-src.png';
-		var image = bigRender.DisplayFactory.makeImg(src);
+		this.applyCtxStyle(command);
+
+		var image = bigRender.DisplayFactory.makeImg(command.src);
 		var srcX = command.srcX || 0;
 		var srcY = command.srcY || 0;
 		var srcWidth = command.srcWidth || image.width;
 		var srcHeight = command.srcHeight || image.height;
+		var destX = command.destX || 0;
+		var destY = command.destY || 0;
 		var destWidth = command.destWidth || image.width;
 		var destHeight = command.destHeight || image.width;
-
-		command.translateX = command.x || command.destX || command.translateX;
-		command.translateY = command.y || command.destY || command.translateY;
-		this.applyCtxStyle(command);
 
 		this.ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight, 0, 0, destWidth, destHeight);
 	};
@@ -137,16 +97,17 @@ var bigRender = bigRender || {};
 		this.applyCtxStyle(command);
 
 		var shape = command.shape;
+
 		if(shape === bigRender.shape.RECTANGLE) {
 			this._drawRectangle(command);
 		}
-		else if(shape === bigRender.shape.ELLIPSE) {
+		if(shape === bigRender.shape.ELLIPSE) {
 			this._drawEllipse(command);
 		}
-		else if( shape === bigRender.shape.TRIANGLE ) {
+		if(shape === bigRender.shape.TRIANGLE) {
 			this._drawTriangle(command);
 		}
-		else if( shape === bigRender.shape.STAR ) {
+		if(shape === bigRender.shape.STAR) {
 			this._drawStar(command);
 		}
 
@@ -180,6 +141,12 @@ var bigRender = bigRender || {};
 	};
 
 
+	p.floodFill = function(command) {
+		this.applyCtxStyle(command);
+
+	};
+
+
 	p._copyRect = function(rect) {
 		var x = rect.x;
 		var y = rect.y;
@@ -196,7 +163,7 @@ var bigRender = bigRender || {};
 		width = Maths.limit(width, 1, this.width - x);
 		height = Maths.limit(height, 1, this.height - y);
 
-		var destCanvas = bigRender.CanvasCache.pop();
+		var destCanvas = CanvasStore.checkout();
 		destCanvas.width = width;
 		destCanvas.height = height;
 
@@ -264,19 +231,10 @@ var bigRender = bigRender || {};
 	
 	
 	p._drawStar = function(command) {
-		var x = command.x;
-		var y = command.y;
 		var width = command.width;
 		var height = command.height;
-
-		var centerX = x + ( width / 2 );
-		var centerY = y + ( height / 2 );
 		var spacing = Math.PI * 2 / 5;
-
 		var diameter = Math.max( Math.abs( width ), Math.abs( height ) ) / 2;
-		var scaleX = width / diameter;
-		var scaleY = height / diameter;
-
 		var hSpacing = spacing / 2;
 		var pRadius = diameter / 2;
 		var iRadius = pRadius / 2;
@@ -313,9 +271,6 @@ var bigRender = bigRender || {};
 		var i4y = Math.sin( i4Rad ) * iRadius;
 		var i5x = Math.cos( i5Rad ) * iRadius;
 		var i5y = Math.sin( i5Rad ) * iRadius;
-
-		this.ctx.translate( centerX, centerY );
-		this.ctx.scale( scaleX, scaleY );
 
 		this.ctx.beginPath();
 		this.ctx.moveTo( p1x, p1y );
