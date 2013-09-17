@@ -96,20 +96,7 @@ var bigRender = bigRender || {};
 	p.drawShape = function(command) {
 		this.applyCtxStyle(command);
 
-		var shape = command.shape;
-
-		if(shape === bigRender.shape.RECTANGLE) {
-			this._drawRectangle(command);
-		}
-		if(shape === bigRender.shape.ELLIPSE) {
-			this._drawEllipse(command);
-		}
-		if(shape === bigRender.shape.TRIANGLE) {
-			this._drawTriangle(command);
-		}
-		if(shape === bigRender.shape.STAR) {
-			this._drawStar(command);
-		}
+		bigRender.ShapeTools.drawShape(this.ctx, command);
 
 		if(command.fill !== false) {
 			this.ctx.fill();
@@ -175,116 +162,6 @@ var bigRender = bigRender || {};
 	p.deleteRect = function(command) {
 		var rect = command.rect;
 		this.ctx.clearRect(rect.x, rect.y, rect.width, rect.height);
-	};
-
-
-	p._drawEllipse = function(command) {
-		this.ctx.beginPath();
-		var x = command.x;
-		var y = command.y;
-		var width = command.width;
-		var height = command.height;
-		var hB = ( width / 2 ) * 0.5522848;
-		var vB = ( height / 2 ) * 0.5522848;
-		var eX = x + width;
-		var eY = x + height;
-		var mX = x + width / 2;
-		var mY = x + height / 2;
-		this.ctx.moveTo( x, mY );
-		this.ctx.bezierCurveTo( x, mY - vB, mX - hB, y, mX, y );
-		this.ctx.bezierCurveTo( mX + hB, y, eX, mY - vB, eX, mY );
-		this.ctx.bezierCurveTo( eX, mY + vB, mX + hB, eY, mX, eY );
-		this.ctx.bezierCurveTo( mX - hB, eY, x, mY + vB, x, mY );
-		this.ctx.closePath();
-	};
-
-
-	p._drawRectangle = function(command) {
-		var left = command.x;
-		var right = command.x + command.width;
-		var top = command.y;
-		var bottom = command.y + command.height;
-
-		this.ctx.beginPath();
-		this.ctx.moveTo(left, top);
-		this.ctx.lineTo(right, top);
-		this.ctx.lineTo(right, bottom);
-		this.ctx.lineTo(left, bottom);
-		this.ctx.lineTo(left, top);
-		this.ctx.closePath();
-	};
-
-
-	p._drawTriangle = function(command) {
-		var left = command.x;
-		var right = command.x + command.width;
-		var top = command.y;
-		var bottom = command.y + command.height;
-
-		this.ctx.beginPath();
-		this.ctx.moveTo( left, top );
-		this.ctx.lineTo( right, bottom );
-		this.ctx.lineTo( left, bottom );
-		this.ctx.lineTo( left, top );
-		this.ctx.closePath();
-	};
-	
-	
-	p._drawStar = function(command) {
-		var width = command.width;
-		var height = command.height;
-		var spacing = Math.PI * 2 / 5;
-		var diameter = Math.max( Math.abs( width ), Math.abs( height ) ) / 2;
-		var hSpacing = spacing / 2;
-		var pRadius = diameter / 2;
-		var iRadius = pRadius / 2;
-
-		var p1Rad = spacing * 0;
-		var p2Rad = spacing * 1;
-		var p3Rad = spacing * 2;
-		var p4Rad = spacing * 3;
-		var p5Rad = spacing * 4;
-		var i1Rad = p1Rad + hSpacing;
-		var i2Rad = p2Rad + hSpacing;
-		var i3Rad = p3Rad + hSpacing;
-		var i4Rad = p4Rad + hSpacing;
-		var i5Rad = p5Rad + hSpacing;
-
-		var p1x = Math.cos( p1Rad ) * pRadius;
-		var p1y = Math.sin( p1Rad ) * pRadius;
-		var p2x = Math.cos( p2Rad ) * pRadius;
-		var p2y = Math.sin( p2Rad ) * pRadius;
-		var p3x = Math.cos( p3Rad ) * pRadius;
-		var p3y = Math.sin( p3Rad ) * pRadius;
-		var p4x = Math.cos( p4Rad ) * pRadius;
-		var p4y = Math.sin( p4Rad ) * pRadius;
-		var p5x = Math.cos( p5Rad ) * pRadius;
-		var p5y = Math.sin( p5Rad ) * pRadius;
-
-		var i1x = Math.cos( i1Rad ) * iRadius;
-		var i1y = Math.sin( i1Rad ) * iRadius;
-		var i2x = Math.cos( i2Rad ) * iRadius;
-		var i2y = Math.sin( i2Rad ) * iRadius;
-		var i3x = Math.cos( i3Rad ) * iRadius;
-		var i3y = Math.sin( i3Rad ) * iRadius;
-		var i4x = Math.cos( i4Rad ) * iRadius;
-		var i4y = Math.sin( i4Rad ) * iRadius;
-		var i5x = Math.cos( i5Rad ) * iRadius;
-		var i5y = Math.sin( i5Rad ) * iRadius;
-
-		this.ctx.beginPath();
-		this.ctx.moveTo( p1x, p1y );
-		this.ctx.lineTo( i1x, i1y );
-		this.ctx.lineTo( p2x, p2y );
-		this.ctx.lineTo( i2x, i2y );
-		this.ctx.lineTo( p3x, p3y );
-		this.ctx.lineTo( i3x, i3y );
-		this.ctx.lineTo( p4x, p4y );
-		this.ctx.lineTo( i4x, i4y );
-		this.ctx.lineTo( p5x, p5y );
-		this.ctx.lineTo( i5x, i5y );
-		this.ctx.lineTo( p1x, p1y );
-		this.ctx.closePath();
 	};
 
 

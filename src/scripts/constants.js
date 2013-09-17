@@ -65,7 +65,9 @@ bigRender.blendMode = {
 
 bigRender.shape = {
 	RECTANGLE: 'rectangle',
+	ROUND_RECTANGLE: 'roundRectangle',
 	ELLIPSE: 'ellipse',
-	TRIANGLE: 'triangle',
+	CIRCLE: 'circle',
+	POLYGON: 'polygon',
 	STAR: 'star'
 };
