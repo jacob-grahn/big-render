@@ -1,7 +1,6 @@
 var bigRender = bigRender || {};
 
 bigRender.event = {
-	DATA_CHANGED: 'dataChanged',
 	DIMENSIONS_CHANGED: 'dimensionsChanged',
 	TARGET_LAYER_CHANGED: 'targetLayerChanged',
 	HIGHLIGHT_LAYER_CHANGED: 'highlightLayerChanged',
