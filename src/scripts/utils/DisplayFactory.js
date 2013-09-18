@@ -8,9 +8,16 @@ var bigRender = bigRender || {};
 
 	var DisplayFactory = function() {
 		this.images = {};
+		this.queue = new createjs.LoadQueue();
 	};
 
 	var p = DisplayFactory.prototype;
+
+
+	p.add = function(img) {
+		var src = img.getAttribute('src');
+		this.images[src] = img;
+	};
 
 
 	p.make = function(src) {
@@ -25,7 +32,7 @@ var bigRender = bigRender || {};
 		if(!img) {
 			img = document.createElement('img');
 			img.setAttribute('src', src);
-			this.images[src] = img;
+			this.add(img);
 		}
 		return(img);
 	};
@@ -37,4 +44,5 @@ var bigRender = bigRender || {};
 
 
 	bigRender.DisplayFactory = new DisplayFactory();
+
 }());

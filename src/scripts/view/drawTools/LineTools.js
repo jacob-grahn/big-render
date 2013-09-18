@@ -31,35 +31,57 @@ var bigRender = bigRender || {};
 		var curY = path[1];
 		var nextX = 0;
 		var nextY = 0;
+		var result = true;
 
 		for(var i=0; i<path.length; i+=2) {
 			nextX = path[i];
 			nextY = path[i+1];
-			this.drawLineWithSteps(curX, curY, nextX, nextY, func);
+			result = this.drawLineWithSteps(curX, curY, nextX, nextY, func);
+			if(!result) {
+				break;
+			}
 			curX = nextX;
 			curY = nextY;
 		}
+
+		return(result);
 	};
 
 
 	p.drawLineWithSteps = function(startX, startY, endX, endY, func) {
-		var curX = startX;
-		var curY = startY;
-		var distX = endX - startX;
-		var distY = endY - startY;
-		var distTot = bigRender.Maths.pythag(distX, distY);
-		var distTraveled = 0;
-		var stepX = distX / distTot;
-		var stepY = distY / distTot;
+		var curX = startX,
+				curY = startY,
+				lastX,
+				lastY,
+				roundedX,
+				roundedY,
+				distX = endX - startX,
+				distY = endY - startY,
+				distTot = bigRender.Maths.pythag(distX, distY),
+				distTraveled = 0,
+				stepX = distX / distTot,
+				stepY = distY / distTot,
+				result = true;
 
 		while(distTraveled <= distTot) {
-			var roundedX = Math.round(curX);
-			var roundedY = Math.round(curY);
-			func(roundedX, roundedY);
+			roundedX = Math.round(curX);
+			roundedY = Math.round(curY);
+
+			if(roundedX !== lastX || roundedY !== lastY) {
+				result = func(roundedX, roundedY);
+				if(!result) {
+					break;
+				}
+			}
+
+			lastX = roundedX;
+			lastY = roundedY;
 			curX += stepX;
 			curY += stepY;
 			distTraveled += 1;
 		}
+
+		return(result);
 	};
 
 

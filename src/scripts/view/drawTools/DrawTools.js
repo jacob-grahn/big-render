@@ -8,7 +8,6 @@ var bigRender = bigRender || {};
 
 	var DrawTools = function(ctx) {
 		this.ctx = ctx;
-		_.bindAll(this, 'drawPixel');
 	};
 
 	var p = DrawTools.prototype;
@@ -45,34 +44,36 @@ var bigRender = bigRender || {};
 		var brush = command.brush || 'line';
 		var LineTools = bigRender.LineTools;
 		var self = this;
+		var result = true;
 
 		if(brush === bigRender.brush.LINE) {
 			LineTools.drawPathWithStrokes(this.ctx, command.path);
 		}
 
 		else if(command.brush === bigRender.brush.IMAGE) {
-			LineTools.drawPathWidthSteps(command.path, function(x, y) {
+			result = LineTools.drawPathWidthSteps(command.path, function(x, y) {
 				command.translateX = x;
 				command.translateY = y;
-				self.drawImage(command);
+				return(self.drawImage(command));
 			});
 		}
 
 		else if(command.brush === bigRender.brush.PIXEL) {
-			LineTools.drawPathWidthSteps(command.path, function(x, y) {
-				command.x = x;
-				command.y = y;
-				self.drawPixel(command);
+			result = LineTools.drawPathWidthSteps(command.path, function(x, y) {
+				return(bigRender.PixelTools.drawPixel(self.ctx, x, y, command.width, command.height));
 			});
 		}
 
 		else if(command.brush === bigRender.brush.SHAPE) {
-			LineTools.drawPathWidthSteps(command.path, function(x, y) {
+			result = LineTools.drawPathWidthSteps(command.path, function(x, y) {
 				command.x = x;
 				command.y = y;
-				self.drawShape(command);
+				return(self.drawShape(command));
 			});
 		}
+
+		console.log('drawLine result', result);
+		return(result);
 	};
 
 
@@ -89,7 +90,13 @@ var bigRender = bigRender || {};
 		var destWidth = command.destWidth || image.width;
 		var destHeight = command.destHeight || image.width;
 
-		this.ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight, 0, 0, destWidth, destHeight);
+		if(image.width === 0 && image.height === 0) {
+			return(false);
+		}
+		else {
+			this.ctx.drawImage(image, srcX, srcY, srcWidth, srcHeight, destX, destY, destWidth, destHeight);
+			return(true);
+		}
 	};
 
 
@@ -104,16 +111,8 @@ var bigRender = bigRender || {};
 		if(command.stroke !== false) {
 			this.ctx.stroke();
 		}
-	};
 
-
-	p.drawPixel = function(command) {
-		this.applyCtxStyle(command);
-		var x = command.x;
-		var y = command.y;
-		var width = command.width || 1;
-		var height = command.height || 1;
-		this.ctx.fillRect(x, y, width, height);
+		return(true);
 	};
 
 

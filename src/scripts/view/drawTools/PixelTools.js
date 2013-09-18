@@ -13,6 +13,7 @@ var bigRender = bigRender || {};
 		width = width || 1;
 		height = height || 1;
 		ctx.fillRect(x, y, width, height);
+		return(true);
 	};
 
 
@@ -117,6 +118,6 @@ var bigRender = bigRender || {};
 	};
 
 
-	bigRender.PixelTools = PixelTools;
+	bigRender.PixelTools = new PixelTools();
 
 }());

@@ -60,19 +60,9 @@
 		var canvas = document.getElementById('demo-canvas');
 		var r = new bigRender.BigRender(canvas);
 		r.setDimensions(200, 200);
+		//r.preloadImages('img/brush.png', 'img/tree.jpeg');
 
-		var queue = new createjs.LoadQueue();
-		queue.addEventListener("complete", allLoadedHandler);
-		queue.loadManifest([
-			'img/brush.png',
-			'img/tree.jpeg'
-		]);
-
-
-		function allLoadedHandler() {
-			console.log('all loaded!');
-			drawTest();
-		}
+		drawTest();
 
 
 		function setTitle(str) {
@@ -92,6 +82,8 @@
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,75,75,30,100,70,200,100], brush: bigRender.brush.PIXEL, fillStyle: '#FF0000'});
 			//draw a line using an image
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,100,75,55,100,95,200,125], brush: bigRender.brush.IMAGE, src: 'img/brush.png', scaleX: 0.5, scaleY: 0.5, globalAlpha: 0.1});
+			//draw a line using a shape
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,125,75,80,100,120,200,150], brush: bigRender.brush.SHAPE, shape: bigRender.shape.CIRCLE, globalAlpha: 0.05, stroke:true, fill:false, strokeStyle:'purple', fillStyle:'pink'});
 		}
 
 		//object draw test

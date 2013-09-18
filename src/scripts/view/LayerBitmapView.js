@@ -17,7 +17,9 @@ var bigRender = bigRender || {};
 		this.commandDispatcher = commandDispatcher;
 		this.drawTools = new bigRender.DrawTools(this.ctx);
 
-		createjs.Bitmap.call(this, this.canvas); //super
+		//super
+		createjs.Bitmap.call(this, this.canvas);
+		//
 
 		_.bindAll(this, '_doDrawImageHandler', '_doDrawLineHandler', '_doDrawShapeHandler', '_doEraseRectHandler', '_doMoveRectHandler', '_redrawHandler');
 		this._addListeners();
@@ -94,7 +96,10 @@ var bigRender = bigRender || {};
 
 
 	p._doDrawLineHandler = function(e) {
-		this.drawTools.drawLine(e.command);
+		var result = this.drawTools.drawLine(e.command);
+		if(!result) {
+			e.returnStatus = 'repeat';
+		}
 	};
 
 

@@ -40,7 +40,7 @@ var bigRender = bigRender || {};
 		this.model.clear();
 		this.view.clear();
 		this.controller.clear();
-	}
+	};
 
 
 	p.remove = function() {
