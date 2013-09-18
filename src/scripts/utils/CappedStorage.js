@@ -4,9 +4,9 @@ var bigRender = bigRender || {};
 	'use strict';
 
 
-	var CappedStorage = function() {
+	var CappedStorage = function(maxItems) {
 		this.items = [];
-		this.maxItems = 10;
+		this.maxItems = maxItems || 10;
 	};
 
 	var p = CappedStorage.prototype;
@@ -42,6 +42,6 @@ var bigRender = bigRender || {};
 	};
 
 
-	bigRender.CappedStorage = new CappedStorage();
+	bigRender.CappedStorage = CappedStorage;
 
 }());

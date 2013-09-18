@@ -174,7 +174,6 @@ var bigRender = bigRender || {};
 			this.startIn(500);
 			success = false;
 		}
-		console.log(command, event);
 		return(success);
 	};
 

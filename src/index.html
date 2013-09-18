@@ -24,7 +24,8 @@
 	<script src="scripts/utils/CanvasCache.js"></script>
 	<script src="scripts/utils/CappedStorage.js"></script>
 	<script src="scripts/utils/CommandDispatcher.js"></script>
-	<script src="scripts/utils/DisplayFactory.js"></script>
+	<script src="scripts/utils/ImageCache.js"></script>
+	<script src="scripts/utils/ImageTinter.js"></script>
 	<script src="scripts/utils/Maths.js"></script>
 	<script src="scripts/utils/Queue.js"></script>
 	<script src="scripts/utils/Task.js"></script>
@@ -74,16 +75,21 @@
 			setTitle('Draw Test');
 			r.clear();
 			r.addCommand({type: bigRender.command.CREATE_LAYER});
+
 			//draw a shape
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 150, y: 20, radius: 15, stroke:false, fill:true, fillStyle: '#0000FF'});
+
 			//draw a line
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,50,75,5,100,45,200,75], lineWidth: 5, strokeStyle: '#00FF00'});
+
 			//draw a pixel line
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,75,75,30,100,70,200,100], brush: bigRender.brush.PIXEL, fillStyle: '#FF0000'});
+
 			//draw a line using an image
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,100,75,55,100,95,200,125], brush: bigRender.brush.IMAGE, src: 'img/brush.png', scaleX: 0.5, scaleY: 0.5, globalAlpha: 0.1});
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,115,75,70,100,110,200,140], brush: bigRender.brush.IMAGE, src: 'img/brush.png', scaleX: 0.5, scaleY: 0.5, globalAlpha: 0.07, tintColor: '#123456', tintPerc: 1, rotation: 0, stepDist: .1});
+
 			//draw a line using a shape
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,125,75,80,100,120,200,150], brush: bigRender.brush.SHAPE, shape: bigRender.shape.CIRCLE, globalAlpha: 0.05, stroke:true, fill:false, strokeStyle:'purple', fillStyle:'pink'});
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,175,75,130,100,170,200,200], brush: bigRender.brush.SHAPE, shape: bigRender.shape.CIRCLE, globalAlpha: 0.2, stroke: true, fill: true, strokeStyle: 'purple', fillStyle: 'pink', stepDist: 10});
 		}
 
 		//object draw test

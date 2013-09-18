@@ -26,7 +26,8 @@ var bigRender = bigRender || {};
 	};
 
 
-	p.drawPathWidthSteps = function(path, func) {
+	p.drawPathWithSteps = function(params, func) {
+		var path = params.path;
 		var curX = path[0];
 		var curY = path[1];
 		var nextX = 0;
@@ -36,10 +37,16 @@ var bigRender = bigRender || {};
 		for(var i=0; i<path.length; i+=2) {
 			nextX = path[i];
 			nextY = path[i+1];
-			result = this.drawLineWithSteps(curX, curY, nextX, nextY, func);
+
+			params.startX = curX;
+			params.startY = curY;
+			params.endX = nextX;
+			params.endY = nextY;
+			result = this.drawLineWithSteps(params, func);
 			if(!result) {
 				break;
 			}
+
 			curX = nextX;
 			curY = nextY;
 		}
@@ -48,8 +55,14 @@ var bigRender = bigRender || {};
 	};
 
 
-	p.drawLineWithSteps = function(startX, startY, endX, endY, func) {
-		var curX = startX,
+	p.drawLineWithSteps = function(params, func) {
+		var startX = params.startX || 0,
+				startY = params.startY || 0,
+				endX = params.endX || 0,
+				endY = params.endY || 0,
+				stepDist = params.stepDist || 1,
+				useRounding = params.useRounding || true,
+				curX = startX,
 				curY = startY,
 				lastX,
 				lastY,
@@ -59,13 +72,19 @@ var bigRender = bigRender || {};
 				distY = endY - startY,
 				distTot = bigRender.Maths.pythag(distX, distY),
 				distTraveled = 0,
-				stepX = distX / distTot,
-				stepY = distY / distTot,
+				stepDistX = distX / distTot * stepDist,
+				stepDistY = distY / distTot * stepDist,
 				result = true;
 
 		while(distTraveled <= distTot) {
-			roundedX = Math.round(curX);
-			roundedY = Math.round(curY);
+			if(useRounding) {
+				roundedX = Math.round(curX);
+				roundedY = Math.round(curY);
+			}
+			else {
+				roundedX = curX;
+				roundedY = curY;
+			}
 
 			if(roundedX !== lastX || roundedY !== lastY) {
 				result = func(roundedX, roundedY);
@@ -76,9 +95,9 @@ var bigRender = bigRender || {};
 
 			lastX = roundedX;
 			lastY = roundedY;
-			curX += stepX;
-			curY += stepY;
-			distTraveled += 1;
+			curX += stepDistX;
+			curY += stepDistY;
+			distTraveled += stepDist;
 		}
 
 		return(result);

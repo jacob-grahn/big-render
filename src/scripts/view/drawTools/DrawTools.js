@@ -51,7 +51,7 @@ var bigRender = bigRender || {};
 		}
 
 		else if(command.brush === bigRender.brush.IMAGE) {
-			result = LineTools.drawPathWidthSteps(command.path, function(x, y) {
+			result = LineTools.drawPathWithSteps(command, function(x, y) {
 				command.translateX = x;
 				command.translateY = y;
 				return(self.drawImage(command));
@@ -59,20 +59,19 @@ var bigRender = bigRender || {};
 		}
 
 		else if(command.brush === bigRender.brush.PIXEL) {
-			result = LineTools.drawPathWidthSteps(command.path, function(x, y) {
+			result = LineTools.drawPathWithSteps(command, function(x, y) {
 				return(bigRender.PixelTools.drawPixel(self.ctx, x, y, command.width, command.height));
 			});
 		}
 
 		else if(command.brush === bigRender.brush.SHAPE) {
-			result = LineTools.drawPathWidthSteps(command.path, function(x, y) {
+			result = LineTools.drawPathWithSteps(command, function(x, y) {
 				command.x = x;
 				command.y = y;
 				return(self.drawShape(command));
 			});
 		}
 
-		console.log('drawLine result', result);
 		return(result);
 	};
 
@@ -80,13 +79,16 @@ var bigRender = bigRender || {};
 	p.drawImage = function(command) {
 		this.applyCtxStyle(command);
 
-		var image = bigRender.DisplayFactory.makeImg(command.src);
+		var tintColor = command.color || command.tintColor || '#FFFFFF';
+		var tintPerc = command.tintPerc || 0;
+		var image = bigRender.ImageCache.makeTintedImg(command.src, tintColor, tintPerc);
+		console.log(image, image.width, image.height);
 		var srcX = command.srcX || 0;
 		var srcY = command.srcY || 0;
 		var srcWidth = command.srcWidth || image.width;
 		var srcHeight = command.srcHeight || image.height;
-		var destX = command.destX || 0;
-		var destY = command.destY || 0;
+		var destX = command.destX || -(image.width/2);
+		var destY = command.destY || -(image.height/2);
 		var destWidth = command.destWidth || image.width;
 		var destHeight = command.destHeight || image.width;
 
