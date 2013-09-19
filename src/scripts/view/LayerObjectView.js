@@ -108,19 +108,29 @@ var bigRender = bigRender || {};
 
 
 	p._positionObject = function(command, displayObject) {
+		var first = bigRender.firstWithValue;
 		var d = displayObject || this.lookup[command.objectId];
 		if(d) {
-			d.x = command.x || d.x;
-			d.y = command.y || d.y;
-			d.scaleX = command.scaleX || d.scaleX;
-			d.scaleY = command.scaleY || d.scaleY;
-			d.rotation = command.rotation || d.rotation;
-			d.alpha = command.alpha || d.alpha;
-			d.skewX = command.skewX || d.skewX;
-			d.skewY = command.skewY || d.skewY;
+			d.x = first(command.x, d.x);
+			d.y = first(command.y, d.y);
+			d.scaleX = first(command.scaleX, d.scaleX);
+			d.scaleY = first(command.scaleY, d.scaleY);
+			d.rotation = first(command.rotation, d.rotation);
+			d.alpha = first(command.alpha, d.alpha);
+			d.skewX = first(command.skewX, d.skewX);
+			d.skewY = first(command.skewY, d.skewY);
 
-			if(typeof command.regX !== 'undefined' && d instanceof createjs.Bitmap) {
-				var regX = command.regX || d.regX || 'center';
+			var regX = first(command.regX, d.regX, 'center');
+			var regY = first(command.regY, d.regY, 'center');
+
+			if(typeof regX === 'number') {
+				d.regX = regX;
+			}
+			if(typeof regY === 'number') {
+				d.regY = regY;
+			}
+
+			if(d instanceof createjs.Bitmap) {
 				if(regX === 'center') {
 					d.regX = d.image.width / 2;
 				}
@@ -130,13 +140,6 @@ var bigRender = bigRender || {};
 				if(regX === 'right') {
 					d.regX = d.image.width;
 				}
-				if(typeof regX === 'number') {
-					d.regX = regX;
-				}
-			}
-
-			if(typeof command.regY !== 'undefined' && d instanceof createjs.Bitmap) {
-				var regY = command.regY || d.regY || 'center';
 				if(regY === 'top') {
 					d.regY = 0;
 				}
@@ -145,9 +148,6 @@ var bigRender = bigRender || {};
 				}
 				if(regY === 'bottom') {
 					d.regY = d.image.height;
-				}
-				if(typeof regY === 'number') {
-					d.regY = regY;
 				}
 			}
 		}
