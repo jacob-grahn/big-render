@@ -28,7 +28,6 @@ var bigRender = bigRender || {};
 				ctx.globalAlpha = 1;
 				ctx.globalCompositeOperation = 'source-over';
 
-				console.log('tint', src, src.width, src.height, color, perc, dest, dest.width, dest.height);
 				return(dest);
 			}
 		}

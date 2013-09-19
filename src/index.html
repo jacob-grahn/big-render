@@ -63,7 +63,7 @@
 		r.setDimensions(200, 200);
 		//r.preloadImages('img/brush.png', 'img/tree.jpeg');
 
-		drawTest();
+		objTest();
 
 
 		function setTitle(str) {
@@ -76,20 +76,23 @@
 			r.clear();
 			r.addCommand({type: bigRender.command.CREATE_LAYER});
 
-			//draw a shape
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 150, y: 20, radius: 15, stroke:false, fill:true, fillStyle: '#0000FF'});
+			//draw a white background
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, x: 0, y: 0, width: 200, height: 200, stroke: false, fill: true, fillStyle: '#FFFFFF'});
+
+			//draw a star
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 150, y: 20, radius: 15, stroke:true, fill:true, fillStyle: 'yellow', strokeStyle: 'orange', lineWidth: 1});
 
 			//draw a line
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,50,75,5,100,45,200,75], lineWidth: 5, strokeStyle: '#00FF00'});
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,50,75,5,100,45,190,75], lineWidth: 5, strokeStyle: '#33FF55'});
 
 			//draw a pixel line
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,75,75,30,100,70,200,100], brush: bigRender.brush.PIXEL, fillStyle: '#FF0000'});
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,80,75,35,100,75,190,105], brush: bigRender.brush.PIXEL, fillStyle: '#FF0000'});
 
 			//draw a line using an image
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,115,75,70,100,110,200,140], brush: bigRender.brush.IMAGE, src: 'img/brush.png', scaleX: 0.5, scaleY: 0.5, globalAlpha: 0.07, tintColor: '#123456', tintPerc: 1, rotation: 0, stepDist: .1});
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,115,75,70,100,110,190,140], brush: bigRender.brush.IMAGE, src: 'img/brush.png', scaleX: 0.5, scaleY: 0.5, globalAlpha: 0.07, tintColor: '#123456', tintPerc: 1, rotation: 0, stepDist: .1});
 
 			//draw a line using a shape
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [0,175,75,130,100,170,200,200], brush: bigRender.brush.SHAPE, shape: bigRender.shape.CIRCLE, globalAlpha: 0.2, stroke: true, fill: true, strokeStyle: 'purple', fillStyle: 'pink', stepDist: 10});
+			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,165,75,120,100,160,190,190], brush: bigRender.brush.SHAPE, shape: bigRender.shape.CIRCLE, globalAlpha: 0.2, stroke: true, fill: true, strokeStyle: 'purple', fillStyle: 'pink', stepDist: 10});
 		}
 
 		//object draw test
@@ -97,10 +100,11 @@
 			setTitle('Object Test');
 			r.clear();
 			r.addCommand({type: bigRender.command.CREATE_LAYER});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 1});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 2, scaleX: 0.1, scaleY: 0.1});
-			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 1, x: 100, y: 150, rotation: 180});
-			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 1, scaleX: 0.5, scaleY: 0.25});
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 1, x: 20, y: 100, scaleX: 0.25, scaleY: 0.25, regX: 'center', regY: 'center'});
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 2, x: 60, y: 100, scaleX: 0.25, scaleY: 0.25, regX: 'center', regY: 'center'});
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 3, x: 100, y: 100, scaleX: 0.25, scaleY: 0.25, regX: 'center', regY: 'center'});
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 4, x: 140, y: 100, scaleX: 0.25, scaleY: 0.25, regX: 'center', regY: 'center'});
+			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 3, rotation: 180});
 		}
 
 		//long draw test
@@ -109,9 +113,9 @@
 			r.clear();
 			r.addCommand({type: bigRender.command.CREATE_LAYER});
 			for(var i=0; i<10000; i++) {
-				var x1 = Math.random()* r.width;
+				var x1 = Math.random() * r.width;
 				var y1 = Math.random() * r.height;
-				var x2 = Math.random()* r.width;
+				var x2 = Math.random() * r.width;
 				var y2 = Math.random() * r.height;
 				r.addCommand({type: bigRender.command.DRAW_LINE, path: [x1, y1, x2, y2], lineWidth: 1, strokeStyle: '#123456', globalAlpha: 0.25});
 			}

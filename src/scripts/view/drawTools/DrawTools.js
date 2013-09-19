@@ -82,7 +82,6 @@ var bigRender = bigRender || {};
 		var tintColor = command.color || command.tintColor || '#FFFFFF';
 		var tintPerc = command.tintPerc || 0;
 		var image = bigRender.ImageCache.makeTintedImg(command.src, tintColor, tintPerc);
-		console.log(image, image.width, image.height);
 		var srcX = command.srcX || 0;
 		var srcY = command.srcY || 0;
 		var srcWidth = command.srcWidth || image.width;

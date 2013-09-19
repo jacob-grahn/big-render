@@ -51,13 +51,17 @@ var bigRender = bigRender || {};
 		var command = e.command;
 		var src = command.src;
 		var objectId = command.id || command.objectId || this.nextObjectId++;
-		var displayObject = bigRender.DisplayFactory.make(src);
+		var displayObject = bigRender.ImageCache.makeBitmap(src);
 
-		displayObject.objectId = command.objectId = objectId;
-
-		this.lookup[objectId] = displayObject;
-		this.addChild(displayObject);
-		this._positionObject(command, displayObject);
+		if(displayObject.image.width === 0) {
+			e.returnStatus = 'repeat';
+		}
+		else {
+			displayObject.objectId = command.objectId = objectId;
+			this.lookup[objectId] = displayObject;
+			this.addChild(displayObject);
+			this._positionObject(command, displayObject);
+		}
 	};
 
 
@@ -114,6 +118,38 @@ var bigRender = bigRender || {};
 			d.alpha = command.alpha || d.alpha;
 			d.skewX = command.skewX || d.skewX;
 			d.skewY = command.skewY || d.skewY;
+
+			if(typeof command.regX !== 'undefined' && d instanceof createjs.Bitmap) {
+				var regX = command.regX || d.regX || 'center';
+				if(regX === 'center') {
+					d.regX = d.image.width / 2;
+				}
+				if(regX === 'left') {
+					d.regX = 0;
+				}
+				if(regX === 'right') {
+					d.regX = d.image.width;
+				}
+				if(typeof regX === 'number') {
+					d.regX = regX;
+				}
+			}
+
+			if(typeof command.regY !== 'undefined' && d instanceof createjs.Bitmap) {
+				var regY = command.regY || d.regY || 'center';
+				if(regY === 'top') {
+					d.regY = 0;
+				}
+				if(regY === 'center') {
+					d.regY = d.image.height / 2;
+				}
+				if(regY === 'bottom') {
+					d.regY = d.image.height;
+				}
+				if(typeof regY === 'number') {
+					d.regY = regY;
+				}
+			}
 		}
 	};
 
