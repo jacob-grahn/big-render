@@ -27,7 +27,8 @@ bigRender.command = {
 	ERASE_RECT: 'eraseRect',
 	DRAW_LINE: 'drawLine',
 	DRAW_SHAPE: 'drawShape',
-	DRAW_IMAGE: 'drawImage'
+	DRAW_IMAGE: 'drawImage',
+	FLOOD_FILL: 'floodFill'
 };
 
 

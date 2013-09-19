@@ -1,5 +1,7 @@
 /* global Color */
 
+/* flood fill code roughly based on tutorial here: http://www.williammalone.com/articles/html5-canvas-javascript-paint-bucket-tool/ */
+
 var bigRender = bigRender || {};
 
 (function(){
@@ -24,56 +26,95 @@ var bigRender = bigRender || {};
 	};
 
 
-	p.floodFill = function(ctx, startX, startY, width, height) {
-		width = width || 50;
-		height = height || 50;
-		var left = Math.round(startX - width / 2);
-		var top = Math.round(startY - height / 2);
-		var imageData = ctx.getImageData(left, top, width, height);
+	p.floodFill = function(canvas, params) {
+		var centerX = params.x || 0,
+				centerY = params.y || 0,
+				width = params.width || 50,
+				height = params.height || 50,
+				color = params.color || params.fillStyle || '#000000',
+				top = Math.round(centerY - height / 2),
+				right = Math.round(centerX + width / 2),
+				bottom = Math.round(centerY + height / 2),
+				left = Math.round(centerX - width / 2),
+				ctx = canvas.getContext('2d');
+
+		top = bigRender.Maths.limit(top, 0, canvas.height);
+		right = bigRender.Maths.limit(right, 0, canvas.width);
+		bottom = bigRender.Maths.limit(bottom, 0, canvas.height);
+		left = bigRender.Maths.limit(left, 0, canvas.width);
+		width = right - left;
+		height = bottom - top;
+
+		if(width > 0 && height > 0 && top < centerY && right > centerX && bottom > centerY && left < centerX) {
+			var imageData = ctx.getImageData(left, top, width, height);
+			var rawFloodColor = this._simpleToRawColor(color);
+			this.floodFillImageData({data:imageData.data, startX:centerX-left, startY:centerY-top, top:0, right:width, bottom:height, left:0, floodColor:rawFloodColor});
+			ctx.putImageData(imageData, left, top);
+		}
 	};
 
 
-	p.doFloodFill = function (imageData, startX, startY, drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight, startColor, floodColor) {
-		var newPos,
-			x,
-			y,
-			pixelPos,
-			reachLeft,
-			reachRight,
-			drawingBoundLeft = drawingAreaX,
-			drawingBoundTop = drawingAreaY,
-			drawingBoundRight = drawingAreaX + drawingAreaWidth - 1,
-			drawingBoundBottom = drawingAreaY + drawingAreaHeight - 1,
-			pixelStack = [[startX, startY]];
+	p.floodFillImageData = function (params) {
+
+		console.log('floodFillImageData', params);
+
+		var data = params.data,
+				startX = params.startX,
+				startY = params.startY,
+				floodColor = params.floodColor,
+				top = params.top,
+				right = params.right,
+				bottom = params.bottom,
+				left = params.left,
+				width = right - left,
+				height = bottom - top,
+				newPos,
+				x,
+				y,
+				pixelPos,
+				reachLeft,
+				reachRight,
+				pixelStack = [[startX, startY]];
+
+		right -= 1;
+		bottom -= 1;
+
+		//get the start color
+		pixelPos = (startY * width + startX) * 4;
+		var startColor = [
+			data[pixelPos],
+			data[pixelPos+1],
+			data[pixelPos+2],
+			data[pixelPos+3]
+		];
 
 		while (pixelStack.length) {
-
 			newPos = pixelStack.pop();
 			x = newPos[0];
 			y = newPos[1];
 
 			// Get current pixel position
-			pixelPos = (y * drawingAreaWidth + x) * 4;
+			pixelPos = (y * width + x) * 4;
 
 			// Go up as long as the color matches and are inside the canvas
-			while (y >= drawingBoundTop && this.matchColor(imageData, pixelPos, startColor)) {
+			while (y >= top && this._matchRawColor(data, pixelPos, startColor)) {
 				y -= 1;
-				pixelPos -= drawingAreaWidth * 4;
+				pixelPos -= width * 4;
 			}
 
-			pixelPos += drawingAreaWidth * 4;
+			pixelPos += width * 4;
 			y += 1;
 			reachLeft = false;
 			reachRight = false;
 
 			// Go down as long as the color matches and in inside the canvas
-			while (y <= drawingBoundBottom && this.matchColor(imageData, pixelPos, startColor)) {
+			while (y <= bottom && this._matchRawColor(data, pixelPos, startColor)) {
 				y += 1;
 
-				this.colorPixel(imageData, pixelPos, floodColor);
+				this._colorRawPixel(data, pixelPos, floodColor);
 
-				if (x > drawingBoundLeft) {
-					if (this.matchColor(imageData, pixelPos-4, startColor)) {
+				if (x > left) {
+					if (this._matchRawColor(data, pixelPos-4, startColor)) {
 						if (!reachLeft) {
 							// Add pixel to stack
 							pixelStack.push([x - 1, y]);
@@ -84,8 +125,8 @@ var bigRender = bigRender || {};
 					}
 				}
 
-				if (x < drawingBoundRight) {
-					if (this.matchColor(imageData, pixelPos+4, startColor)) {
+				if (x < right) {
+					if (this._matchRawColor(data, pixelPos+4, startColor)) {
 						if (!reachRight) {
 							// Add pixel to stack
 							pixelStack.push([x + 1, y]);
@@ -96,25 +137,35 @@ var bigRender = bigRender || {};
 					}
 				}
 
-				pixelPos += drawingAreaWidth * 4;
+				pixelPos += width * 4;
 			}
 		}
 	};
 
 
-	p.matchColor = function(imageData, pixelPos, startColor) {
-		var r = imageData[pixelPos];
-		var g = imageData[pixelPos+1];
-		var b = imageData[pixelPos+2];
-		var a = imageData[pixelPos+3];
-		return (r === startColor._red && g === startColor._green && b === startColor._blue && a === Math.round(startColor._alpha*255));
+	p._simpleToRawColor = function(simpleColor) {
+		var color = new Color(simpleColor);
+		var rawColor = [
+			color._red,
+			color._green,
+			color._blue,
+			Math.round(color._alpha * 255)
+		];
+		console.log('_simpleToRawColor', simpleColor, color, rawColor);
+		return(rawColor);
 	};
 
-	p.colorPixel = function (imageData, pixelPos, fillColor){
-		imageData[pixelPos] = fillColor._red;
-		imageData[pixelPos+1] = fillColor._green;
-		imageData[pixelPos+2] = fillColor._blue;
-		imageData[pixelPos+3] = Math.round(fillColor._alpha * 255);
+
+	p._matchRawColor = function(data, pixelPos, rawColor) {
+		return (data[pixelPos] === rawColor[0] && data[pixelPos+1] === rawColor[1] && data[pixelPos+2] === rawColor[2] && data[pixelPos+3] === rawColor[3]);
+	};
+
+
+	p._colorRawPixel = function (data, pixelPos, rawColor) {
+		data[pixelPos] = rawColor[0];
+		data[pixelPos+1] = rawColor[1];
+		data[pixelPos+2] = rawColor[2];
+		data[pixelPos+3] = rawColor[3];
 	};
 
 

@@ -21,7 +21,7 @@ var bigRender = bigRender || {};
 		createjs.Bitmap.call(this, this.canvas);
 		//
 
-		_.bindAll(this, '_doDrawImageHandler', '_doDrawLineHandler', '_doDrawShapeHandler', '_doEraseRectHandler', '_doMoveRectHandler', '_redrawHandler');
+		_.bindAll(this, '_doDrawImageHandler', '_doDrawLineHandler', '_doDrawShapeHandler', '_doEraseRectHandler', '_doMoveRectHandler', '_doFloodFillHandler', '_redrawHandler');
 		this._addListeners();
 		this.setDimensions(width, height);
 	};
@@ -62,31 +62,47 @@ var bigRender = bigRender || {};
 
 	p._addListeners = function() {
 		var c = this.commandDispatcher;
+
 		c.addEventListener(bigRender.command.DRAW_IMAGE + 'Do', this._doDrawImageHandler);
 		c.addEventListener(bigRender.command.DRAW_IMAGE + 'Undo', this._redrawHandler);
+
 		c.addEventListener(bigRender.command.DRAW_LINE + 'Do', this._doDrawLineHandler);
 		c.addEventListener(bigRender.command.DRAW_LINE + 'Undo', this._redrawHandler);
+
 		c.addEventListener(bigRender.command.DRAW_SHAPE + 'Do', this._doDrawShapeHandler);
 		c.addEventListener(bigRender.command.DRAW_SHAPE + 'Undo',this._redrawHandler);
+
 		c.addEventListener(bigRender.command.ERASE_RECT + 'Do', this._doEraseRectHandler);
 		c.addEventListener(bigRender.command.ERASE_RECT + 'Undo', this._redrawHandler);
+
 		c.addEventListener(bigRender.command.MOVE_RECT + 'Do', this._doMoveRectHandler);
 		c.addEventListener(bigRender.command.MOVE_RECT + 'Undo', this._redrawHandler);
+
+		c.addEventListener(bigRender.command.FLOOD_FILL + 'Do', this._doFloodFillHandler);
+		c.addEventListener(bigRender.command.FLOOD_FILL + 'Undo', this._redrawHandler);
 	};
 
 
 	p._removeListeners = function() {
 		var c = this.commandDispatcher;
+
 		c.removeEventListener(bigRender.command.DRAW_IMAGE + 'Do', this._doDrawImageHandler);
 		c.removeEventListener(bigRender.command.DRAW_IMAGE + 'Undo', this._redrawHandler);
+
 		c.removeEventListener(bigRender.command.DRAW_LINE + 'Do', this._doDrawLineHandler);
 		c.removeEventListener(bigRender.command.DRAW_LINE + 'Undo', this._redrawHandler);
+
 		c.removeEventListener(bigRender.command.DRAW_SHAPE + 'Do', this._doDrawShapeHandler);
 		c.removeEventListener(bigRender.command.DRAW_SHAPE + 'Undo',this._redrawHandler);
+
 		c.removeEventListener(bigRender.command.ERASE_RECT + 'Do', this._doEraseRectHandler);
 		c.removeEventListener(bigRender.command.ERASE_RECT + 'Undo', this._redrawHandler);
+
 		c.removeEventListener(bigRender.command.MOVE_RECT + 'Do', this._doMoveRectHandler);
 		c.removeEventListener(bigRender.command.MOVE_RECT + 'Undo', this._redrawHandler);
+
+		c.removeEventListener(bigRender.command.FLOOD_FILL + 'Do', this._doFloodFillHandler);
+		c.removeEventListener(bigRender.command.FLOOD_FILL + 'Undo', this._redrawHandler);
 	};
 
 
@@ -115,6 +131,11 @@ var bigRender = bigRender || {};
 
 	p._doMoveRectHandler = function(e) {
 		this.drawTools.moveRect(e.command);
+	};
+
+
+	p._doFloodFillHandler = function(e) {
+		bigRender.PixelTools.floodFill(this.canvas, e.command);
 	};
 
 

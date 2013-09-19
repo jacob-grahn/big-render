@@ -51,6 +51,7 @@
 
 	<a href="javascript:lineTest();">Line Test</a> |
 	<a href="javascript:shapeTest();">Shape Test</a> |
+	<a href="javascript:fillTest();">Flood Fill Test</a> |
 	<a href="javascript:objTest();">Object Test</a> |
 	<a href="javascript:longDrawTest();">Long Draw Test</a> |
 	<a href="javascript:saveTest();">Save/Load Test</a> |
@@ -65,7 +66,7 @@
 		r.setDimensions(200, 200);
 		//r.preloadImages('img/brush.png', 'img/tree.jpeg');
 
-		shapeTest();
+		fillTest();
 
 
 		function setTitle(str) {
@@ -75,7 +76,7 @@
 
 		//draw test
 		function lineTest() {
-			setTitle('Draw Test');
+			setTitle('Line Test');
 			r.clear();
 
 			//create the layer we will draw on
@@ -122,6 +123,25 @@
 
 			//draw a hexagon
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.POLYGON, sides: 6, x: 150, y: 150, radius: 20, stroke:true, fill:true, fillStyle: 'red', strokeStyle: 'darkred', lineWidth: 10});
+		};
+
+
+		//flood fill test
+		function fillTest() {
+			setTitle('Flood Fill Test');
+			r.clear();
+
+			//create the layer we will draw on
+			r.addCommand({type: bigRender.command.CREATE_LAYER});
+
+			//draw a white background
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, width: 200, height: 200, x: 100, y: 100, stroke: false, fill: true, fillStyle: '#FFFFFF'});
+
+			//draw a diamond
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, translateX: 30, translateY: 30, width: 20, height: 20, stroke: true, fill: false, strokeStyle: '#123456', rotation: 45});
+
+			//
+			r.addCommand({type: bigRender.command.FLOOD_FILL, x: 50, y: 50, fillStyle: 'purple'});
 		};
 
 

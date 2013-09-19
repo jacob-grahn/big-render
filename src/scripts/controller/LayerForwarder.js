@@ -12,6 +12,7 @@ var bigRender = bigRender || {};
 			bigRender.command.DRAW_LINE,
 			bigRender.command.DRAW_SHAPE,
 			bigRender.command.ERASE_RECT,
+			bigRender.command.FLOOD_FILL,
 			bigRender.command.MOVE_OBJECT,
 			bigRender.command.MOVE_RECT,
 			bigRender.command.REMOVE_OBJECT
