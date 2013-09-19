@@ -63,6 +63,8 @@ var bigRender = bigRender || {};
 				y = command.y || 0,
 				w = command.width || command.w || 10,
 				h = command.height || command.h || 10;
+		x -= w / 2;
+		y -= h / 2;
 
 		this.graphics.rect(x, y, w, h);
 	};
@@ -74,6 +76,8 @@ var bigRender = bigRender || {};
 				w = command.width || command.w || 10,
 				h = command.height || command.h || 10,
 				radius = command.radius || 3;
+		x -= w / 2;
+		y -= h / 2;
 
 		this.graphics.drawRoundRect(x, y, w, h, radius);
 	};

@@ -171,7 +171,7 @@ var bigRender = bigRender || {};
 		var success = true;
 		if(event.returnStatus === 'repeat') {
 			this.stop();
-			this.startIn(500);
+			this.startIn(100);
 			success = false;
 		}
 		return(success);

@@ -14,6 +14,7 @@ var bigRender = bigRender || {};
 
 
 	p.applyCtxStyle = function(command, ctx) {
+		var first = bigRender.firstWithValue;
 		command = command || {};
 		ctx = ctx || this.ctx;
 

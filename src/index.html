@@ -49,7 +49,8 @@
 
 <body style="background-color:lightgray">
 
-	<a href="javascript:drawTest();">Draw Test</a> |
+	<a href="javascript:lineTest();">Line Test</a> |
+	<a href="javascript:shapeTest();">Shape Test</a> |
 	<a href="javascript:objTest();">Object Test</a> |
 	<a href="javascript:longDrawTest();">Long Draw Test</a> |
 	<a href="javascript:saveTest();">Save/Load Test</a> |
@@ -64,24 +65,24 @@
 		r.setDimensions(200, 200);
 		//r.preloadImages('img/brush.png', 'img/tree.jpeg');
 
-		objTest();
+		shapeTest();
 
 
 		function setTitle(str) {
 			document.getElementById('title').innerHTML = str;
 		}
 
+
 		//draw test
-		function drawTest() {
+		function lineTest() {
 			setTitle('Draw Test');
 			r.clear();
+
+			//create the layer we will draw on
 			r.addCommand({type: bigRender.command.CREATE_LAYER});
 
 			//draw a white background
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, x: 0, y: 0, width: 200, height: 200, stroke: false, fill: true, fillStyle: '#FFFFFF'});
-
-			//draw a star
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 150, y: 20, radius: 15, stroke:true, fill:true, fillStyle: 'yellow', strokeStyle: 'orange', lineWidth: 1});
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, width: 200, height: 200, x: 100, y: 100, stroke: false, fill: true, fillStyle: '#FFFFFF'});
 
 			//draw a line
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,50,75,5,100,45,190,75], lineWidth: 5, strokeStyle: '#33FF55'});
@@ -96,7 +97,35 @@
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,165,75,120,100,160,190,190], brush: bigRender.brush.SHAPE, shape: bigRender.shape.CIRCLE, globalAlpha: 0.2, stroke: true, fill: true, strokeStyle: 'purple', fillStyle: 'pink', stepDist: 10});
 		}
 
-		//object draw test
+		//shape test
+		function shapeTest() {
+			setTitle('Shape Test');
+			r.clear();
+
+			//create the layer we will draw on
+			r.addCommand({type: bigRender.command.CREATE_LAYER});
+
+			//draw a white background
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, width: 200, height: 200, x: 100, y: 100, stroke: false, fill: true, fillStyle: '#FFFFFF'});
+
+			//draw a diamond
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, translateX: 30, translateY: 30, width: 20, height: 20, stroke: true, fill: false, strokeStyle: '#123456', rotation: 45});
+
+			//draw a triangle
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.POLYGON, sides: 3, translateX: 50, translateY: 125, rotation: 30, radius: 40, stroke: false, fill: true, fillStyle: 'blue'});
+
+			//draw a circle
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.CIRCLE, x: 100, y: 70, radius: 25, strokeStyle: 'green', fillStyle: 'purple'});
+
+			//draw a star
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 150, y: 20, radius: 15, stroke:true, fill:true, fillStyle: 'yellow', strokeStyle: 'orange', lineWidth: 1});
+
+			//draw a hexagon
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.POLYGON, sides: 6, x: 150, y: 150, radius: 20, stroke:true, fill:true, fillStyle: 'red', strokeStyle: 'darkred', lineWidth: 10});
+		};
+
+
+		//object test
 		function objTest() {
 			setTitle('Object Test');
 			r.clear();
