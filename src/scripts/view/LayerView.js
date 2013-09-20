@@ -1,4 +1,4 @@
-/* global createjs */
+/* global createjs, _ */
 var bigRender = bigRender || {};
 
 (function() {
@@ -9,6 +9,8 @@ var bigRender = bigRender || {};
 	var LayerView = function(layerModel, queue, width, height) {
 		createjs.Container.call(this); //super
 
+		this.displayAlpha = 1;
+
 		this.layerModel = layerModel;
 		this.commandDispatcher = new bigRender.CommandDispatcher(layerModel, queue);
 
@@ -17,21 +19,26 @@ var bigRender = bigRender || {};
 
 		this.addChild(this.bitmap);
 		this.addChild(this.objectHolder);
+
+		_.bindAll(this, '_layerChangedHandler');
+		this._addListeners();
 	};
 
 	var p = LayerView.prototype = new createjs.Container();
 
 
-	p.setDisplayOpacity = function(num) {
-		this.opacity = num * this.layerModel.opacity;
+	p.updateDisplay = function() {
+		var m = this.layerModel;
+		this.x = m.scrollX * m.scrollPerc;
+		this.y = m.scrollY * m.scrollPerc;
+		this.alpha = m.alpha * this.displayAlpha;
+		this.visible = m.visible;
 	};
 
 
-	p._addListeners = function() {
-	};
-
-
-	p._removeListeners = function() {
+	p.setDisplayAlpha = function(num) {
+		this.displayAlpha = num;
+		this.updateDisplay();
 	};
 
 
@@ -46,12 +53,31 @@ var bigRender = bigRender || {};
 
 
 	p.copy = function() {
-
 	};
 
 
 	p.clear = function() {
+	};
 
+
+	p.remove = function() {
+		this._removeListeners();
+		this.clear();
+	};
+
+
+	p._addListeners = function() {
+		this.layerModel.addEventListener(bigRender.event.LAYER_CHANGED, this._layerChangedHandler);
+	};
+
+
+	p._removeListeners = function() {
+		this.layerModel.removeEventListener(bigRender.event.LAYER_CHANGED, this._layerChangedHandler);
+	};
+
+
+	p._layerChangedHandler = function() {
+		this.updateDisplay();
 	};
 
 

@@ -18,6 +18,15 @@ var bigRender = bigRender || {};
 	var p = CompositionController.prototype = bigRender.CommandChainController.prototype;
 
 
+	p.scroll = function(x, y) {
+		this.model.setScroll(x, y);
+		for(var i=0; i<this.model.layers.length; i++) {
+			var layerModel = this.model.layers[i];
+			layerModel.setScroll(x, y);
+		}
+	};
+
+
 	p.highlightLayer = function(layer) {
 		this.model.highlightLayer = layer;
 	};
@@ -68,6 +77,12 @@ var bigRender = bigRender || {};
 		if(this.model.targetCommandPos < this.model.commands.length) {
 			this.model.setTargetCommandPos(this.model.targetCommandPos + 1);
 		}
+	};
+
+
+	p.setTargetLayer = function(layerId) {
+		var layer = this.model.getLayerById(layerId);
+		this.model.setTargetLayer(layer);
 	};
 
 

@@ -55,9 +55,6 @@ var bigRender = bigRender || {};
 
 
 	p.floodFillImageData = function (params) {
-
-		console.log('floodFillImageData', params);
-
 		var data = params.data,
 				startX = params.startX,
 				startY = params.startY,
@@ -151,7 +148,6 @@ var bigRender = bigRender || {};
 			color._blue,
 			Math.round(color._alpha * 255)
 		];
-		console.log('_simpleToRawColor', simpleColor, color, rawColor);
 		return(rawColor);
 	};
 

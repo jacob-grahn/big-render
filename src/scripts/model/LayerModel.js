@@ -14,8 +14,10 @@ var bigRender = bigRender || {};
 		this.layerId = null;
 		this.name = 'Layer';
 		this.zIndex = 0;
-		this.opacity = 1;
+		this.alpha = 1;
 		this.scrollPerc = 1;
+		this.scrollX = 0;
+		this.scrollY = 0;
 		this.visible = true;
 		this.active = true;
 	};
@@ -24,13 +26,23 @@ var bigRender = bigRender || {};
 
 
 	p.setOptions = function(obj) {
-		this.name = obj.name || this.name;
-		this.zIndex = obj.zIndex || this.zIndex;
-		this.opacity = obj.opacity || this.opacity;
-		this.scrollPerc = obj.scrollPerc || this.scrollPerc;
-		this.visible = obj.visible || this.visible;
-		this.active = obj.active || this.active;
+		var first = bigRender.firstWithValue;
+		this.name = first(obj.name, this.name);
+		this.zIndex = first(obj.zIndex, this.zIndex);
+		this.alpha = first(obj.alpha, this.alpha);
+		this.scrollPerc = first(obj.scrollPerc, this.scrollPerc);
+		this.visible = first(obj.visible, this.visible);
+		this.active = first(obj.active, this.active);
 		this.dispatchEvent(bigRender.event.LAYER_CHANGED);
+	};
+
+
+	p.setScroll = function(x, y) {
+		if(this.scrollX !== x || this.scrollY !== y) {
+			this.scrollX = x;
+			this.scrollY = y;
+			this.dispatchEvent(bigRender.event.LAYER_CHANGED);
+		}
 	};
 
 

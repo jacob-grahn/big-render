@@ -23,6 +23,8 @@ var bigRender = bigRender || {};
 		this.setSaveObj = _.bind(c.setSaveObj, c);
 		this.undo = _.bind(c.undo, c);
 		this.redo = _.bind(c.redo, c);
+		this.setTargetLayer = _.bind(c.setTargetLayer, c);
+		this.scroll = _.bind(c.scroll, c);
 	};
 
 	var p = BigRender.prototype;

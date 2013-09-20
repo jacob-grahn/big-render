@@ -37,6 +37,7 @@ var bigRender = bigRender || {};
 
 	p._createListeners = function() {
 		var c = this.commandDispatcher;
+
 		c.addEventListener(bigRender.command.CREATE_LAYER + 'Do', this._doCreateLayer);
 		c.addEventListener(bigRender.command.CREATE_LAYER + 'Undo', this._undoCreateLayer);
 
@@ -52,10 +53,13 @@ var bigRender = bigRender || {};
 
 	p._removeListeners = function() {
 		var c = this.commandDispatcher;
+
 		c.removeEventListener(bigRender.command.CREATE_LAYER + 'Do', this._doCreateLayer);
 		c.removeEventListener(bigRender.command.CREATE_LAYER + 'Undo', this._undoCreateLayer);
+
 		c.removeEventListener(bigRender.command.DELETE_LAYER + 'Do', this._doDeleteLayer);
 		c.removeEventListener(bigRender.command.DELETE_LAYER + 'Undo', this._undoDeleteLayer);
+
 		c.removeEventListener(bigRender.command.EDIT_LAYER + 'Do', this._doEditLayer);
 		c.removeEventListener(bigRender.command.EDIT_LAYER + 'Undo', this._undoEditLayer);
 	};
@@ -64,7 +68,8 @@ var bigRender = bigRender || {};
 	p._doCreateLayer = function(e) {
 		var command = e.command;
 		command.layerId = command.layerId || this.model.nextLayerId++;
-		this.createLayer(command.layerId);
+		var layer = this.createLayer(command.layerId);
+		layer.setOptions(e.command);
 	};
 
 

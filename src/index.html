@@ -54,7 +54,8 @@
 	<a href="javascript:fillTest();">Flood Fill Test</a> |
 	<a href="javascript:objTest();">Object Test</a> |
 	<a href="javascript:longDrawTest();">Long Draw Test</a> |
-	<a href="javascript:saveTest();">Save/Load Test</a> |
+	<a href="javascript:layerTest();">Layer Test</a> |
+	<a href="javascript:saveTest();">Save/Load Test</a>
 	<br>
 	<br>
 	<h1 id="title"></h1>
@@ -64,9 +65,8 @@
 		var canvas = document.getElementById('demo-canvas');
 		var r = new bigRender.BigRender(canvas);
 		r.setDimensions(200, 200);
-		//r.preloadImages('img/brush.png', 'img/tree.jpeg');
 
-		fillTest();
+		layerTest();
 
 
 		function setTitle(str) {
@@ -74,16 +74,24 @@
 		}
 
 
-		//draw test
-		function lineTest() {
-			setTitle('Line Test');
+		function setupTest(title) {
+			setTitle(title);
+			endRandomScrolling();
+
+			//clear out any shenanigans from previous tests
 			r.clear();
 
 			//create the layer we will draw on
-			r.addCommand({type: bigRender.command.CREATE_LAYER});
+			r.addCommand({type: bigRender.command.CREATE_LAYER, scrollPerc: 0});
 
 			//draw a white background
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, width: 200, height: 200, x: 100, y: 100, stroke: false, fill: true, fillStyle: '#FFFFFF'});
+		}
+
+
+		//draw test
+		function lineTest() {
+			setupTest('Line Test');
 
 			//draw a line
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,50,75,5,100,45,190,75], lineWidth: 5, strokeStyle: '#33FF55'});
@@ -100,14 +108,7 @@
 
 		//shape test
 		function shapeTest() {
-			setTitle('Shape Test');
-			r.clear();
-
-			//create the layer we will draw on
-			r.addCommand({type: bigRender.command.CREATE_LAYER});
-
-			//draw a white background
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, width: 200, height: 200, x: 100, y: 100, stroke: false, fill: true, fillStyle: '#FFFFFF'});
+			setupTest('Shape Test');
 
 			//draw a diamond
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, translateX: 30, translateY: 30, width: 20, height: 20, stroke: true, fill: false, strokeStyle: '#123456', rotation: 45});
@@ -128,14 +129,7 @@
 
 		//flood fill test
 		function fillTest() {
-			setTitle('Flood Fill Test');
-			r.clear();
-
-			//create the layer we will draw on
-			r.addCommand({type: bigRender.command.CREATE_LAYER});
-
-			//draw a white background
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, width: 200, height: 200, x: 100, y: 100, stroke: false, fill: true, fillStyle: '#FFFFFF'});
+			setupTest('Flood Fill Test');
 
 			//draw a diamond
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, translateX: 30, translateY: 30, width: 20, height: 20, stroke: true, fill: false, strokeStyle: '#123456', rotation: 45});
@@ -147,21 +141,18 @@
 
 		//object test
 		function objTest() {
-			setTitle('Object Test');
-			r.clear();
-			r.addCommand({type: bigRender.command.CREATE_LAYER});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 1, x: 20, y: 100, scaleX: 0.25, scaleY: 0.25, regX: 'center', regY: 'center'});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 2, x: 60, y: 100, scaleX: 0.25, scaleY: 0.25, regX: 'center', regY: 'center'});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 3, x: 100, y: 100, scaleX: 0.25, scaleY: 0.25, regX: 'center', regY: 'center'});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 4, x: 140, y: 100, scaleX: 0.25, scaleY: 0.25, regX: 'center', regY: 'center'});
+			setupTest('Object Test');
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 1, x: 20, y: 100, scaleX: 0.20, scaleY: 0.20, regX: 'center', regY: 'center'});
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 2, x: 60, y: 100, scaleX: 0.20, scaleY: 0.20, regX: 'center', regY: 'center'});
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 3, x: 100, y: 100, scaleX: 0.20, scaleY: 0.20, regX: 'center', regY: 'center'});
+			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 4, x: 140, y: 100, scaleX: 0.20, scaleY: 0.20, regX: 'center', regY: 'center'});
 			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 3, rotation: 180});
 		}
 
+
 		//long draw test
 		function longDrawTest() {
-			setTitle('Long Draw Test');
-			r.clear();
-			r.addCommand({type: bigRender.command.CREATE_LAYER});
+			setupTest('Long Draw Test');
 			for(var i=0; i<10000; i++) {
 				var x1 = Math.random() * r.width;
 				var y1 = Math.random() * r.height;
@@ -171,12 +162,50 @@
 			}
 		}
 
+
+		//layer test
+		function layerTest() {
+			setupTest('Layer Test');
+			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 2, scrollPerc: 0, alpha: 0.75});
+			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 3, scrollPerc: 0.33, alpha: 0.66});
+			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 4, scrollPerc: 0.66, alpha: 0.33});
+
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.CIRCLE, layerId: 2, x: 100, y: 100, radius: 50, strokeStyle: 'green', fillStyle: 'purple'});
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.CIRCLE, layerId: 3, x: 100, y: 100, radius: 50, strokeStyle: 'green', fillStyle: 'purple'});
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.CIRCLE, layerId: 4, x: 100, y: 100, radius: 50, strokeStyle: 'green', fillStyle: 'purple'});
+
+			beginRandomScrolling();
+		}
+
+		var callbackId;
+		var scrollX = 0;
+		var scrollY = 0;
+		function beginRandomScrolling() {
+			endRandomScrolling();
+			animationHandler();
+		}
+		function endRandomScrolling() {
+			window.cancelAnimationFrame(callbackId);
+		}
+		function animationHandler() {
+			scrollX += .5;
+			scrollY += .5;
+			if(scrollX > 100) {
+				scrollX = -100;
+			}
+			if(scrollY > 100) {
+				scrollY = -100;
+			}
+			r.scroll(scrollX, scrollY);
+			callbackId = window.requestAnimationFrame(animationHandler);
+		}
+
+
 		//save test
 		function saveTest() {
-			setTitle('Save Test');
-			r.clear();
-			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId:1});
-			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId:2});
+			setupTest('Save Test');
+			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 1});
+			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 2});
 			r.setTargetLayer(2);
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 10, y: 10, width: 50, height: 50});
 		}

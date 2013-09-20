@@ -16,7 +16,7 @@ var bigRender = bigRender || {};
 		this.stage.autoClear = true;
 		this.layers = [];
 
-		_.bindAll(this, '_tickHandler', '_targetLayerChangedHandler', '_highlightLayerChangedHandler', '_layerAddedHandler', '_layerRemovedHandler', '_layerChangedHandler', '_commandPosChangedHandler', '_scrollChangedHandler');
+		_.bindAll(this, '_tickHandler', '_targetLayerChangedHandler', '_highlightLayerChangedHandler', '_layerAddedHandler', '_layerRemovedHandler', '_layerChangedHandler', '_commandPosChangedHandler');
 		this._addListeners();
 	};
 
@@ -32,7 +32,6 @@ var bigRender = bigRender || {};
 		m.addEventListener(bigRender.event.LAYER_REMOVED, this._layerRemovedHandler);
 		m.addEventListener(bigRender.event.LAYER_CHANGED, this._layerChangedHandler);
 		m.addEventListener(bigRender.event.COMMAND_POS_CHANGED, this._commandPosChangedHandler);
-		m.addEventListener(bigRender.event.SCROLL_CHANGED, this._scrollChangedHandler);
 	};
 
 
@@ -45,7 +44,6 @@ var bigRender = bigRender || {};
 		m.removeEventListener(bigRender.event.LAYER_REMOVED, this._layerRemovedHandler);
 		m.removeEventListener(bigRender.event.LAYER_CHANGED, this._layerChangedHandler);
 		m.removeEventListener(bigRender.event.COMMAND_POS_CHANGED, this._commandPosChangedHandler);
-		m.removeEventListener(bigRender.event.SCROLL_CHANGED, this._scrollChangedHandler);
 	};
 
 
@@ -109,14 +107,6 @@ var bigRender = bigRender || {};
 
 	p._commandPosChangedHandler = function(e) {
 
-	};
-
-
-	p._scrollChangedHandler = function(e) {
-		for(var i=0; i<this.layers.length; i++) {
-			var layerView = this.layers[i];
-			layerView.setScroll(e.command.x, e.command.y);
-		}
 	};
 
 

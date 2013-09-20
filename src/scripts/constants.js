@@ -32,7 +32,7 @@ bigRender.command = {
 };
 
 
-bigRender.option = {
+/*bigRender.option = {
 	LAYER_DEPTH: 'layerDepth',
 	LAYER_OPACITY: 'layerOpacity',
 	LAYER_SCALE: 'layerScale',
@@ -50,7 +50,7 @@ bigRender.option = {
 
 	FILL_OPACITY: 'fillOpacity',
 	FILL_COLOR: 'fillColor'
-};
+};*/
 
 bigRender.brush = {
 	LINE: 'line',
