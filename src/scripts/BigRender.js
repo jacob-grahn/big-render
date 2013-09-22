@@ -30,6 +30,20 @@ var bigRender = bigRender || {};
 	var p = BigRender.prototype;
 
 
+	p.getSaveObj = function() {
+		var saveObj = {};
+		saveObj.settings = this.controller.getSaveObj();
+		saveObj.graphics = this.view.getGraphics();
+	};
+
+
+	p.setSaveObj = function(saveObj) {
+		this.clear();
+		this.controller.setSaveObj(saveObj.settings);
+		this.view.setGraphics(saveObj.graphics);
+	};
+
+
 	p.setDimensions = function(w, h) {
 		this.view.canvas.width = w;
 		this.view.canvas.height = h;

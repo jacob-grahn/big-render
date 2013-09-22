@@ -206,8 +206,7 @@
 			setupTest('Save Test');
 			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 1});
 			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 2});
-			r.setTargetLayer(2);
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 10, y: 10, width: 50, height: 50});
+			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, layerId: 2, x: 10, y: 10, width: 50, height: 50});
 		}
 	</script>
 

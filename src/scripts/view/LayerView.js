@@ -27,6 +27,21 @@ var bigRender = bigRender || {};
 	var p = LayerView.prototype = new createjs.Container();
 
 
+	p.getGraphics = function() {
+		var saveObj = {};
+		saveObj.images = this.bitmap.getImages();
+		saveObj.objects = this.objectHolder.getObjects();
+		saveObj.layerId = this.layerModel.layerId;
+		return(saveObj);
+	};
+
+
+	p.setGraphics = function(saveObj) {
+		this.bitmap.setImages(saveObj.images);
+		this.objectHolder.setObjects(saveObj.objects);
+	};
+
+
 	p.updateDisplay = function() {
 		var m = this.layerModel;
 		this.x = m.scrollX * m.scrollPerc;

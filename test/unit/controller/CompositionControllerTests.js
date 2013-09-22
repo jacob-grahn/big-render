@@ -72,6 +72,15 @@
 			expect(doLine.callCount).toBe(4);
 		});
 
+
+		it('should return a save object filled with all layer settings', function() {
+			cc.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 1, alpha: 0.5, name: 'Layer 1'});
+			cc.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 2, zIndex: 995, name: 'Layer 2'});
+			var saveObj = cc.getSaveObj();
+			expect(saveObj.layers[0].alpha).toBe(0.5);
+			expect(saveObj.layers[1].name).toBe('Layer 2');
+		});
+
 	});
 
 }());

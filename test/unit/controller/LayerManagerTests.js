@@ -44,14 +44,14 @@
 
 			it('should respond to editLayer commands', function() {
 				cc.addCommand({type:bigRender.command.CREATE_LAYER, layerId:9});
-				cc.addCommand({type:bigRender.command.EDIT_LAYER, layerId:9, opacity:0.33});
-				expect(cm.layers[0].opacity).toBe(0.33);
+				cc.addCommand({type:bigRender.command.EDIT_LAYER, layerId:9, alpha:0.33});
+				expect(cm.layers[0].alpha).toBe(0.33);
 
 				cc.undo();
-				expect(cm.layers[0].opacity).toBe(1);
+				expect(cm.layers[0].alpha).toBe(1);
 
 				cc.redo();
-				expect(cm.layers[0].opacity).toBe(0.33);
+				expect(cm.layers[0].alpha).toBe(0.33);
 			});
 		});
 	});

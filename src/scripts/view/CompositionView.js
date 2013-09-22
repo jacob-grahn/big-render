@@ -23,6 +23,37 @@ var bigRender = bigRender || {};
 	var p = CompositionView.prototype;
 
 
+	p.getGraphics = function() {
+		var layerImages = [];
+		for(var i=0; i<this.layers.length; i++) {
+			var layerView = this.layers[i];
+			layerImages.push(layerView.getGraphics());
+		};
+		return(layerImages);
+	};
+
+
+	p.setGraphics = function(graphics) {
+		for(var i=0; i<graphics.length; i++) {
+			var layerGraphics = graphics[i];
+			var layerView = this._getLayerById(layerGraphics.layerId);
+			if(layerView) {
+				layerView.setGraphics(layerGraphics);
+			}
+		}
+	};
+
+
+	p._getLayerById = function(layerId) {
+		for(var i=0; i<this.layers.length; i++) {
+			var layerView = this.layers[i];
+			if(layerView.layerModel.layerId === layerId) {
+				return(layerView);
+			}
+		}
+	}
+
+
 	p._addListeners = function() {
 		var m = this.model;
 		createjs.Ticker.addEventListener('tick', this._tickHandler);

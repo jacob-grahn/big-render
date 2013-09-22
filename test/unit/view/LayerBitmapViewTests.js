@@ -45,7 +45,7 @@
 		});
 
 
-		it('should draw a circle', function() {
+		it('should draw a rectangle', function() {
 			var canvas = document.createElement('canvas');
 			canvas.width = canvas.height = 25;
 			var ctx = canvas.getContext('2d');
@@ -53,25 +53,18 @@
 			ctx.fillStyle = 'green';
 			ctx.lineWidth = 5;
 			ctx.strokeStyle = '#003300';
+			ctx.lineCap = 'round';
+			ctx.lineJoin = 'round';
 
-			var x = 5;
-			var y = 5;
+			var x = 0;
+			var y = 0;
 			var width = 10;
 			var height = 10;
-			var hB = ( width / 2 ) * 0.5522848;
-			var vB = ( height / 2 ) * 0.5522848;
-			var eX = x + width;
-			var eY = x + height;
-			var mX = x + width / 2;
-			var mY = x + height / 2;
-			ctx.moveTo( x, mY );
-			ctx.bezierCurveTo( x, mY - vB, mX - hB, y, mX, y );
-			ctx.bezierCurveTo( mX + hB, y, eX, mY - vB, eX, mY );
-			ctx.bezierCurveTo( eX, mY + vB, mX + hB, eY, mX, eY );
-			ctx.bezierCurveTo( mX - hB, eY, x, mY + vB, x, mY );
-			ctx.closePath();
+			ctx.rect(x, y, width, height);
+			ctx.fill();
+			ctx.stroke();
 
-			var command = {type: bigRender.command.DRAW_SHAPE, fillStyle: 'green', lineWidth: 5, strokeStyle: '#003300', x: 5, y: 5, width: 10, height: 10};
+			var command = {type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, fillStyle: 'green', lineWidth: 5, strokeStyle: '#003300', x: 5, y: 5, width: 10, height: 10};
 			commandDispatcher.dispatchCommand(command, 'Do');
 
 			expect(bitmapView.canvas.toDataURL()).toBe(canvas.toDataURL());

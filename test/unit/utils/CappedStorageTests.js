@@ -5,7 +5,7 @@
 
 	describe('CappedStorage', function() {
 
-		var storage = bigRender.CappedStorage;
+		var storage = new bigRender.CappedStorage();
 
 
 		it('should store things for later', function() {

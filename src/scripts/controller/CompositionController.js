@@ -32,26 +32,25 @@ var bigRender = bigRender || {};
 	};
 
 
-	p.getSaveObj = function() {
+	p.getSettings = function() {
 		var model = this.model;
 
 		var saveObj = {};
 		saveObj.version = 5;
-		saveObj.data = model.data;
 		saveObj.layers = [];
 		saveObj.width = model.width;
 		saveObj.height = model.height;
 
 		for(var i=0; i<model.layers.length; i++) {
 			var layer = model.layers[i];
-			saveObj.layers.push(layer.getSaveObj());
+			saveObj.layers.push(layer.copyOptions());
 		}
 
 		return(saveObj);
 	};
 
 
-	p.setSaveObj = function(saveObj) {
+	p.setSettings = function(saveObj) {
 		this.clear();
 
 		var model = this.model;
