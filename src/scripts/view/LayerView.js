@@ -27,18 +27,18 @@ var bigRender = bigRender || {};
 	var p = LayerView.prototype = new createjs.Container();
 
 
-	p.getGraphics = function() {
+	p.getSaveState = function() {
 		var saveObj = {};
-		saveObj.images = this.bitmap.getImages();
-		saveObj.objects = this.objectHolder.getObjects();
+		saveObj.image = this.bitmap.getSaveState();
+		saveObj.objects = this.objectHolder.getSaveState();
 		saveObj.layerId = this.layerModel.layerId;
 		return(saveObj);
 	};
 
 
-	p.setGraphics = function(saveObj) {
-		this.bitmap.setImages(saveObj.images);
-		this.objectHolder.setObjects(saveObj.objects);
+	p.setSaveState = function(saveObj) {
+		this.bitmap.setSaveState(saveObj.image);
+		this.objectHolder.setSaveState(saveObj.objects);
 	};
 
 
@@ -83,16 +83,23 @@ var bigRender = bigRender || {};
 
 	p._addListeners = function() {
 		this.layerModel.addEventListener(bigRender.event.LAYER_CHANGED, this._layerChangedHandler);
+		this.layerModel.addEventListener(bigRender.event.LAYER_RESIZED, this._layerResizedHandler);
 	};
 
 
 	p._removeListeners = function() {
 		this.layerModel.removeEventListener(bigRender.event.LAYER_CHANGED, this._layerChangedHandler);
+		this.layerModel.removeEventListener(bigRender.event.LAYER_RESIZED, this._layerResizedHandler);
 	};
 
 
-	p._layerChangedHandler = function() {
+	p._layerChangedHandler = function(e) {
 		this.updateDisplay();
+	};
+
+
+	p._layerResizedHandler = function(e) {
+		this.bitmap.setDimensions(e.width, e.height);
 	};
 
 

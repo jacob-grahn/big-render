@@ -7,6 +7,7 @@ bigRender.event = {
 	LAYER_ADDED: 'layerAdded',
 	LAYER_REMOVED: 'layerRemoved',
 	LAYER_CHANGED: 'layerChanged',
+	LAYER_RESIZED: 'layerResized',
 	COMMAND_POS_CHANGED: 'commandPosChanged',
 	SCROLL_CHANGED: 'scrollChanged',
 	COMPLETE: 'complete',

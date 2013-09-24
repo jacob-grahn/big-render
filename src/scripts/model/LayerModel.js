@@ -20,6 +20,8 @@ var bigRender = bigRender || {};
 		this.scrollY = 0;
 		this.visible = true;
 		this.active = true;
+		this.width = 100;
+		this.height = 100;
 	};
 
 	var p = LayerModel.prototype = bigRender.CommandChainModel.prototype;
@@ -34,6 +36,13 @@ var bigRender = bigRender || {};
 		this.visible = first(obj.visible, this.visible);
 		this.active = first(obj.active, this.active);
 		this.dispatchEvent(bigRender.event.LAYER_CHANGED);
+	};
+
+
+	p.setDimensions = function(w, h) {
+		this.width = w;
+		this.height = h;
+		this.dispatchEvent(bigRender.event.LAYER_RESIZED);
 	};
 
 

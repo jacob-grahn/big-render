@@ -41,7 +41,7 @@
 			var command = {type: bigRender.command.DRAW_LINE, lineWidth:5, strokeStyle:'#123456', path:[1,2,24,25]};
 			commandDispatcher.dispatchCommand(command, 'Do');
 
-			expect(bitmapView.canvas.toDataURL()).toBe(canvas.toDataURL());
+			expect(bitmapView.getSaveState()).toBe(canvas.toDataURL());
 		});
 
 

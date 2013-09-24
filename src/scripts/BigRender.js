@@ -13,42 +13,31 @@ var bigRender = bigRender || {};
 		this.model = new bigRender.CompositionModel();
 		this.controller = new bigRender.CompositionController(this.model);
 		this.view = new bigRender.CompositionView(canvas, this.model, this.queue);
-
-		var c = this.controller;
-		this.addCommand = _.bind(c.addCommand, c);
-		this.replaceLastCommand = _.bind(c.replaceLastCommand, c);
-		this.clearLastCommand = _.bind(c.clearLastCommand, c);
-		this.highlightLayer = _.bind(c.highlightLayer, c);
-		this.getSaveObj = _.bind(c.getSaveObj, c);
-		this.setSaveObj = _.bind(c.setSaveObj, c);
-		this.undo = _.bind(c.undo, c);
-		this.redo = _.bind(c.redo, c);
-		this.setTargetLayer = _.bind(c.setTargetLayer, c);
-		this.scroll = _.bind(c.scroll, c);
+		this._setupFunctionForwarding();
 	};
 
 	var p = BigRender.prototype;
 
 
-	p.getSaveObj = function() {
-		var saveObj = {};
-		saveObj.settings = this.controller.getSaveObj();
-		saveObj.graphics = this.view.getGraphics();
+	p.getSaveState = function() {
+		var saveState = {};
+		saveState.settings = this.controller.getSaveState();
+		saveState.graphics = this.view.getSaveState();
+		return(saveState);
 	};
 
 
-	p.setSaveObj = function(saveObj) {
+	p.setSaveState = function(saveState) {
 		this.clear();
-		this.controller.setSaveObj(saveObj.settings);
-		this.view.setGraphics(saveObj.graphics);
+		this.controller.setSaveState(saveState.settings);
+		this.view.setSaveState(saveState.graphics);
 	};
 
 
 	p.setDimensions = function(w, h) {
-		this.view.canvas.width = w;
-		this.view.canvas.height = h;
 		this.width = w;
 		this.height = h;
+		this.controller.setDimensions(w, h);
 	};
 
 
@@ -69,6 +58,21 @@ var bigRender = bigRender || {};
 		this.model = null;
 		this.controller = null;
 		this.view = null;
+	};
+
+
+	p._setupFunctionForwarding = function() {
+		var c = this.controller;
+		this.addCommand = _.bind(c.addCommand, c);
+		this.replaceLastCommand = _.bind(c.replaceLastCommand, c);
+		this.clearLastCommand = _.bind(c.clearLastCommand, c);
+		this.highlightLayer = _.bind(c.highlightLayer, c);
+		this.undo = _.bind(c.undo, c);
+		this.redo = _.bind(c.redo, c);
+		this.setTargetLayer = _.bind(c.setTargetLayer, c);
+		this.scroll = _.bind(c.scroll, c);
+		this.update = _.bind(this.view.update, this.view);
+		this.getSnapshot = _.bind(this.view.getSnapshot, this.view);
 	};
 
 

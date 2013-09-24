@@ -20,7 +20,72 @@ var bigRender = bigRender || {};
 	p.nextObjectId = 1;
 
 
+	p.getSaveState = function() {
+		var state = {};
+		var commands = [];
+
+		for(var i=0; i<this.children.length; i++) {
+			var child = this.children[i];
+			var command = {x: child.x, y: child.y};
+			if(child.rotation !== 0) {
+				command.rotation = child.rotation;
+			}
+			if(child.alpha !== 1) {
+				command.alpha = child.alpha;
+			}
+			if(child.scaleX !== 1) {
+				command.scaleX = child.scaleX;
+			}
+			if(child.scaleY !== 1) {
+				command.scaleY = child.scaleY;
+			}
+			if(child.skewX !== 0) {
+				command.skewX = child.skewX;
+			}
+			if(child.skewY !== 0) {
+				command.skewY = child.skewY;
+			}
+			if(child.rawRegX !== 'center') {
+				command.regX = child.rawRegX;
+			}
+			if(child.rawRegY !== 'center') {
+				command.regY = child.rawRegY;
+			}
+		}
+
+		state.commands = commands;
+		return(state);
+	};
+
+
+	p.setSaveState = function(state) {
+		this.clear();
+		for(var i=0; i<state.length; i++) {
+			var command = state[i];
+			this.addImage(command);
+		}
+	};
+
+
+	p.addImage = function(command) {
+		var src = command.src;
+		var objectId = command.id || command.objectId || this.nextObjectId++;
+		var displayObject = bigRender.ImageCache.makeBitmap(src);
+		displayObject.objectId = command.objectId = objectId;
+		this.lookup[objectId] = displayObject;
+		this.addChild(displayObject);
+		this._positionObject(command, displayObject);
+	};
+
+
+	p.clear = function() {
+		this.removeAllChildren();
+		this.lookup = [];
+	};
+
+
 	p.remove = function() {
+		this.clear();
 		this._removeListeners();
 	};
 
@@ -48,19 +113,12 @@ var bigRender = bigRender || {};
 
 
 	p._doAddObjectHandler = function(e) {
-		var command = e.command;
-		var src = command.src;
-		var objectId = command.id || command.objectId || this.nextObjectId++;
-		var displayObject = bigRender.ImageCache.makeBitmap(src);
-
-		if(displayObject.image.width === 0) {
+		var img = bigRender.ImageCache.makeImg(e.command.src);
+		if(img.width === 0) {
 			e.returnStatus = 'repeat';
 		}
 		else {
-			displayObject.objectId = command.objectId = objectId;
-			this.lookup[objectId] = displayObject;
-			this.addChild(displayObject);
-			this._positionObject(command, displayObject);
+			this.addImage(e.command);
 		}
 	};
 
@@ -120,8 +178,8 @@ var bigRender = bigRender || {};
 			d.skewX = first(command.skewX, d.skewX);
 			d.skewY = first(command.skewY, d.skewY);
 
-			var regX = first(command.regX, d.regX, 'center');
-			var regY = first(command.regY, d.regY, 'center');
+			var regX = first(command.regX, command.rawRegX, d.rawRegX, 'center');
+			var regY = first(command.regY, command.rawRegY, d.rawRegY, 'center');
 
 			if(typeof regX === 'number') {
 				d.regX = regX;
@@ -150,6 +208,9 @@ var bigRender = bigRender || {};
 					d.regY = d.image.height;
 				}
 			}
+
+			d.rawRegX = regX;
+			d.rawRegY = regY;
 		}
 	};
 

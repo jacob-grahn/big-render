@@ -23,24 +23,36 @@ var bigRender = bigRender || {};
 	var p = CompositionView.prototype;
 
 
-	p.getGraphics = function() {
+	p.getSaveState = function() {
 		var layerImages = [];
 		for(var i=0; i<this.layers.length; i++) {
 			var layerView = this.layers[i];
-			layerImages.push(layerView.getGraphics());
-		};
+			layerImages.push(layerView.getSaveState());
+		}
 		return(layerImages);
 	};
 
 
-	p.setGraphics = function(graphics) {
+	p.setSaveState = function(graphics) {
 		for(var i=0; i<graphics.length; i++) {
 			var layerGraphics = graphics[i];
 			var layerView = this._getLayerById(layerGraphics.layerId);
 			if(layerView) {
-				layerView.setGraphics(layerGraphics);
+				layerView.setSaveState(layerGraphics);
 			}
 		}
+	};
+
+
+	p.update = function() {
+		this.stage.update();
+	};
+
+
+	p.getSnapshot = function(copyCanvas) {
+		copyCanvas = copyCanvas || bigRender.CanvasCache.pop(this.canvas.width, this.canvas.height);
+		copyCanvas.getContext('2d').drawImage(this.canvas, 0, 0);
+		return(copyCanvas);
 	};
 
 
@@ -51,7 +63,7 @@ var bigRender = bigRender || {};
 				return(layerView);
 			}
 		}
-	}
+	};
 
 
 	p._addListeners = function() {
@@ -79,7 +91,7 @@ var bigRender = bigRender || {};
 
 
 	p._tickHandler = function(e) {
-		this.stage.update();
+		this.update();
 	};
 
 

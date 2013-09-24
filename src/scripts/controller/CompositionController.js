@@ -32,35 +32,34 @@ var bigRender = bigRender || {};
 	};
 
 
-	p.getSettings = function() {
+	p.getSaveState = function() {
 		var model = this.model;
 
-		var saveObj = {};
-		saveObj.version = 5;
-		saveObj.layers = [];
-		saveObj.width = model.width;
-		saveObj.height = model.height;
+		var saveState = {};
+		saveState.version = 5;
+		saveState.layers = [];
+		saveState.width = model.width;
+		saveState.height = model.height;
 
 		for(var i=0; i<model.layers.length; i++) {
 			var layer = model.layers[i];
-			saveObj.layers.push(layer.copyOptions());
+			saveState.layers.push(layer.copyOptions());
 		}
 
-		return(saveObj);
+		return(saveState);
 	};
 
 
-	p.setSettings = function(saveObj) {
+	p.setSaveState = function(saveState) {
 		this.clear();
 
 		var model = this.model;
-		model.setData(saveObj.data);
-		model.setDimensions(saveObj.width, saveObj.height);
+		model.setDimensions(saveState.width, saveState.height);
 
-		for(var i=0; i<saveObj.layers.length; i++) {
-			var layerSaveObj = saveObj.layers[i];
+		for(var i=0; i<saveState.layers.length; i++) {
+			var layerSaveObj = saveState.layers[i];
 			var layer = this.layerManager.createLayer();
-			layer.setSaveObj(layerSaveObj);
+			layer.setOptions(layerSaveObj);
 		}
 	};
 

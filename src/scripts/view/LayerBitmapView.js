@@ -29,6 +29,20 @@ var bigRender = bigRender || {};
 	var p = LayerBitmapView.prototype = new createjs.Bitmap();
 
 
+	p.getSaveState = function() {
+		var image = this.canvas.toDataURL();
+		return(image);
+	};
+
+
+	p.setSaveState = function(imageSrc) {
+		var img = document.createElement('img');
+		img.setAttribute('src', imageSrc);
+		this.clear();
+		this.ctx.drawImage(img, 0, 0);
+	};
+
+
 	p.setDimensions = function(width, height) {
 		if(width !== this.canvas.width || height !== this.canvas.height) {
 			this.canvas.width = width;
