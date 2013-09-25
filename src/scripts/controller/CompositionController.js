@@ -84,6 +84,15 @@ var bigRender = bigRender || {};
 	};
 
 
+	p.setDimensions = function(w, h) {
+		this.model.setDimensions(w, h);
+		for(var i=0; i<this.model.layers.length; i++) {
+			var layerModel = this.model.layers[i];
+			layerModel.setDimensions(w, y);
+		}
+	};
+
+
 	p.CommandChainControllerClear = p.clear;
 	p.clear = function() {
 		this.CommandChainControllerClear();

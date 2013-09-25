@@ -7,13 +7,12 @@ var bigRender = bigRender || {};
 
 
 	var BigRender = function(canvas) {
-		this.width = canvas.width;
-		this.height = canvas.height;
 		this.queue = new bigRender.Queue();
 		this.model = new bigRender.CompositionModel();
 		this.controller = new bigRender.CompositionController(this.model);
 		this.view = new bigRender.CompositionView(canvas, this.model, this.queue);
 		this._setupFunctionForwarding();
+		this.setDimensions(canvas.width, canvas.height);
 	};
 
 	var p = BigRender.prototype;

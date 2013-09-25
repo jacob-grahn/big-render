@@ -12,6 +12,20 @@ var bigRender = bigRender || {};
 
 
 	p.drawShape = function(ctx, command) {
+		bigRender.ShapeTools.drawShapePath(ctx, command);
+
+		if(command.fill !== false) {
+			ctx.fill();
+		}
+		if(command.stroke !== false) {
+			ctx.stroke();
+		}
+
+		return(true);
+	};
+
+
+	p.drawShapePath = function(ctx, command) {
 		var shape = command.shape || bigRender.shape.RECTANGLE;
 
 		this.graphics.clear();

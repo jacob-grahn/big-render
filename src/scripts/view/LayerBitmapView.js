@@ -15,7 +15,6 @@ var bigRender = bigRender || {};
 		this.canvas = document.createElement('canvas');
 		this.ctx = this.canvas.getContext('2d');
 		this.commandDispatcher = commandDispatcher;
-		this.drawTools = new bigRender.DrawTools(this.ctx);
 
 		//super
 		createjs.Bitmap.call(this, this.canvas);
@@ -121,12 +120,14 @@ var bigRender = bigRender || {};
 
 
 	p._doDrawImageHandler = function(e) {
-		this.drawTools.drawImage(e.command);
+		bigRender.ContextTools.applyStyle(this.ctx, e.command);
+		bigRender.ImageTools.drawImage(this.ctx, e.command);
 	};
 
 
 	p._doDrawLineHandler = function(e) {
-		var result = this.drawTools.drawLine(e.command);
+		bigRender.ContextTools.applyStyle(this.ctx, e.command);
+		var result = bigRender.LineTools.drawLine(this.ctx, e.command);
 		if(!result) {
 			e.returnStatus = 'repeat';
 		}
@@ -134,21 +135,25 @@ var bigRender = bigRender || {};
 
 
 	p._doDrawShapeHandler = function(e) {
-		this.drawTools.drawShape(e.command);
+		bigRender.ContextTools.applyStyle(this.ctx, e.command);
+		bigRender.ShapeTools.drawShape(this.ctx, e.command);
 	};
 
 
 	p._doEraseRectHandler = function(e) {
-		this.drawTools.eraseRect(e.command);
+		bigRender.ContextTools.applyStyle(this.ctx, e.command);
+		bigRender.ImageTools.eraseRect(this.ctx, e.command);
 	};
 
 
 	p._doMoveRectHandler = function(e) {
-		this.drawTools.moveRect(e.command);
+		bigRender.ContextTools.applyStyle(this.ctx, e.command);
+		bigRender.ImageTools.moveRect(this.ctx, e.command);
 	};
 
 
 	p._doFloodFillHandler = function(e) {
+		bigRender.ContextTools.applyStyle(this.ctx, e.command);
 		bigRender.PixelTools.floodFill(this.canvas, e.command);
 	};
 

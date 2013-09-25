@@ -7,6 +7,21 @@ var bigRender = bigRender || {};
 	var p = LineTools.prototype;
 
 
+	p.drawLine = function(ctx, command) {
+		var brush = command.brush || 'line';
+		var result = true;
+
+		if(brush === bigRender.brush.LINE) {
+			this.drawPathWithStrokes(ctx, command.path);
+		}
+		else {
+			result = this.drawPathWithSteps(ctx, command);
+		}
+
+		return(result);
+	};
+
+
 	p.drawPathWithStrokes = function(ctx, path) {
 		var x;
 		var y;
@@ -26,7 +41,7 @@ var bigRender = bigRender || {};
 	};
 
 
-	p.drawPathWithSteps = function(params, func) {
+	p.drawPathWithSteps = function(ctx, params) {
 		var path = params.path;
 		var curX = path[0];
 		var curY = path[1];
@@ -42,7 +57,7 @@ var bigRender = bigRender || {};
 			params.startY = curY;
 			params.endX = nextX;
 			params.endY = nextY;
-			result = this.drawLineWithSteps(params, func);
+			result = this.drawLineWithSteps(ctx, params);
 			if(!result) {
 				break;
 			}
@@ -55,7 +70,7 @@ var bigRender = bigRender || {};
 	};
 
 
-	p.drawLineWithSteps = function(params, func) {
+	p.drawLineWithSteps = function(ctx, params) {
 		var startX = params.startX || 0,
 				startY = params.startY || 0,
 				endX = params.endX || 0,
@@ -87,7 +102,7 @@ var bigRender = bigRender || {};
 			}
 
 			if(roundedX !== lastX || roundedY !== lastY) {
-				result = func(roundedX, roundedY);
+				result = this.drawStep(roundedX, roundedY, ctx, params);
 				if(!result) {
 					break;
 				}
@@ -98,6 +113,33 @@ var bigRender = bigRender || {};
 			curX += stepDistX;
 			curY += stepDistY;
 			distTraveled += stepDist;
+		}
+
+		return(result);
+	};
+
+
+	p.drawStep = function(x, y, ctx, command) {
+		var result;
+
+		bigRender.ContextTools.applyStyle(ctx, command);
+
+		if(command.brush === bigRender.brush.IMAGE) {
+			command.image.translateX = x;
+			command.image.translateY = y;
+			bigRender.ContextTools.appendStyle(ctx, command.image);
+			result = bigRender.ImageTools.drawImage(ctx, command.image);
+		}
+
+		else if(command.brush === bigRender.brush.PIXEL) {
+			result = bigRender.PixelTools.drawPixel(ctx, x, y, command.width, command.height)
+		}
+
+		else if(command.brush === bigRender.brush.SHAPE) {
+			command.shape.translateX = x;
+			command.shape.translateY = y;
+			bigRender.ContextTools.appendStyle(ctx, command.shape);
+			result = bigRender.ShapeTools.drawShape(ctx, command.shape);
 		}
 
 		return(result);

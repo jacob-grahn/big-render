@@ -31,7 +31,8 @@
 	<script src="scripts/utils/Queue.js"></script>
 	<script src="scripts/utils/Task.js"></script>
 
-	<script src="scripts/view/drawTools/DrawTools.js"></script>
+	<script src="scripts/view/drawTools/ContextTools.js"></script>
+	<script src="scripts/view/drawTools/ImageTools.js"></script>
 	<script src="scripts/view/drawTools/LineTools.js"></script>
 	<script src="scripts/view/drawTools/PixelTools.js"></script>
 	<script src="scripts/view/drawTools/ShapeTools.js"></script>
@@ -54,8 +55,7 @@
 	<a href="javascript:fillTest();">Flood Fill Test</a> |
 	<a href="javascript:objTest();">Object Test</a> |
 	<a href="javascript:longDrawTest();">Long Draw Test</a> |
-	<a href="javascript:layerTest();">Layer Test</a> |
-	<a href="javascript:saveTest();">Save/Load Test</a>
+	<a href="javascript:layerTest();">Layer Test</a>
 	<br>
 	<br>
 	<h1 id="title"></h1>
@@ -63,10 +63,10 @@
 
 	<script>
 		var canvas = document.getElementById('demo-canvas');
+		canvas.width = canvas.height = 200;
 		var r = new bigRender.BigRender(canvas);
-		r.setDimensions(200, 200);
 
-		layerTest();
+		lineTest();
 
 
 		function setTitle(str) {
@@ -100,10 +100,37 @@
 			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,80,75,35,100,75,190,105], brush: bigRender.brush.PIXEL, fillStyle: '#FF0000'});
 
 			//draw a line using an image
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,115,75,70,100,110,190,140], brush: bigRender.brush.IMAGE, src: 'img/brush.png', scaleX: 0.5, scaleY: 0.5, globalAlpha: 0.07, tintColor: '#123456', tintPerc: 1, rotation: 0, stepDist: .1});
+			r.addCommand({
+				type: bigRender.command.DRAW_LINE,
+				path: [10,115,75,70,100,110,190,140],
+				brush: bigRender.brush.IMAGE,
+				stepDist: .1,
+				image: {
+					src: 'img/brush.png',
+					scaleX: 0.5,
+					scaleY: 0.5,
+					globalAlpha: 0.07,
+					tintColor: '#123456',
+					tintPerc: 1,
+					rotation: 45
+				}
+			});
 
 			//draw a line using a shape
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,165,75,120,100,160,190,190], brush: bigRender.brush.SHAPE, shape: bigRender.shape.CIRCLE, globalAlpha: 0.2, stroke: true, fill: true, strokeStyle: 'purple', fillStyle: 'pink', stepDist: 10});
+			r.addCommand({
+				type: bigRender.command.DRAW_LINE,
+				path: [10,165,75,120,100,160,190,190],
+				brush: bigRender.brush.SHAPE,
+				stepDist: 10,
+				shape: {
+					shape: bigRender.shape.CIRCLE,
+					globalAlpha: 0.2,
+					stroke: true,
+					fill: true,
+					strokeStyle: 'purple',
+					fillStyle: 'pink'
+				}
+			});
 		}
 
 		//shape test
@@ -124,7 +151,7 @@
 
 			//draw a hexagon
 			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.POLYGON, sides: 6, x: 150, y: 150, radius: 20, stroke:true, fill:true, fillStyle: 'red', strokeStyle: 'darkred', lineWidth: 10});
-		};
+		}
 
 
 		//flood fill test
@@ -136,7 +163,7 @@
 
 			//
 			r.addCommand({type: bigRender.command.FLOOD_FILL, x: 50, y: 50, fillStyle: 'purple'});
-		};
+		}
 
 
 		//object test
@@ -198,15 +225,6 @@
 			}
 			r.scroll(scrollX, scrollY);
 			callbackId = window.requestAnimationFrame(animationHandler);
-		}
-
-
-		//save test
-		function saveTest() {
-			setupTest('Save Test');
-			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 1});
-			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 2});
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, layerId: 2, x: 10, y: 10, width: 50, height: 50});
 		}
 	</script>
 
