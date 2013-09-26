@@ -7,6 +7,10 @@ var bigRender = bigRender || {};
 
 
 	var BigRender = function(canvas) {
+		if(typeof canvas === 'string') {
+			canvas =  document.getElementById(canvas);
+		}
+
 		this.queue = new bigRender.Queue();
 		this.model = new bigRender.CompositionModel();
 		this.controller = new bigRender.CompositionController(this.model);

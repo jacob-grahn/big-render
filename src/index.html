@@ -4,12 +4,9 @@
 
 	<title>BigRender</title>
 
-	<script src="http://code.createjs.com/createjs-2013.05.14.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore.js"></script>
-
-	<!-- build:js scripts/Color.js -->
+	<script src="scripts/easeljs-0.6.1.min.js"></script>
+	<script src="scripts/underscore.js"></script>
 	<script src="scripts/Color.js"></script>
-	<!-- endbuild -->
 
 	<!-- build:js scripts/bigRender.js -->
 	<script src="scripts/controller/CommandChainController.js"></script>
@@ -45,187 +42,425 @@
 	<script src="scripts/constants.js"></script>
 	<!-- endbuild -->
 
+	<script src="examples/examples.js"></script>
+	<script src="examples/shCore.js"></script>
+	<script src="examples/shBrushJScript.js"></script>
+
+	<link href="examples/shCore.css" rel="stylesheet" type="text/css" />
+	<link href="examples/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+	<style type="text/css">
+		.syntaxhighlighter {
+			overflow-y: hidden !important;
+			overflow-x: auto !important;
+		}
+	</style>
+
 </head>
 
 
-<body style="background-color:lightgray">
+<body style="background-color: white">
 
-	<a href="javascript:lineTest();">Line Test</a> |
-	<a href="javascript:shapeTest();">Shape Test</a> |
-	<a href="javascript:fillTest();">Flood Fill Test</a> |
-	<a href="javascript:objTest();">Object Test</a> |
-	<a href="javascript:longDrawTest();">Long Draw Test</a> |
-	<a href="javascript:layerTest();">Layer Test</a>
+	<h1>BigRender</h1>
+	<a href="javascript:drawLogo();">Intro</a> |
+	<a href="javascript:lineTest();">Lines</a> |
+	<a href="javascript:shapeTest();">Shapes</a> |
+	<a href="javascript:fillTest();">Flood Fill</a> |
+	<a href="javascript:objTest();">Objects</a> |
+	<a href="javascript:layerTest();">Layers</a> |
+	<a href="javascript:longDrawTest();">Long Draw</a>
 	<br>
 	<br>
-	<h1 id="title"></h1>
-	<canvas id="demo-canvas"></canvas>
+
+	<canvas id="demo-canvas" width="200" height="200" style="background-color: white; box-shadow: 0px 0px 10px #888888;"></canvas>
+
+
+
+	<div id="setup">
+		<h3>Built for multi-user drawing!</h3>
+		<p>BigRender is a drawing engine built for multi-player apps. Most everything is done by passing in commands, which are simple objects. These commands can be synced from person to person easy breezy.</p>
+		<pre class="brush: js">
+//create a bigRender instance
+var big = new bigRender.BigRender('demo-canvas');
+
+//create the layer we will draw on
+big.addCommand({type: 'createLayer'});
+
+//draw a star
+big.addCommand({
+	type: 'drawShape',
+	shape: 'star',
+	x: 100,
+	y: 100,
+	radius: 100
+});
+		</pre>
+	</div>
+
+
+
+	<div id="lines">
+		<h3>Lines! Woooow!</h3>
+		<p>Lines can be drawn with regular old vectors, pencil style pixels, fancy image brushes, or with shapes for all kinds of effects.</p>
+		<pre class="brush: js">
+//create a bigRender instance
+var big = new bigRender.BigRender('demo-canvas');
+
+//create the layer we will draw on
+big.addCommand({type: 'createLayer'});
+
+//draw a vector line
+big.addCommand({
+	type: 'drawLine',
+	path: [10,50, 75,5, 100,45, 190,75],
+	lineWidth: 5,
+	strokeStyle: 'blue'
+});
+
+//draw a pixel line
+big.addCommand({
+	type: 'drawLine',
+	brush: 'pixel',
+	path: [10,80, 75,35, 100,75, 190,105],
+	fillStyle: 'blue'
+});
+
+//draw a line using an image
+big.addCommand({
+	type: 'drawLine',
+	brush: 'image',
+	path: [10,115, 75,70, 100,110, 190,140],
+	stepDist: 0.1,
+	image: {
+		src: 'img/brush.png',
+		scaleX: 0.5,
+		scaleY: 0.5,
+		globalAlpha: 0.07,
+		tintColor: 'blue',
+		tintPerc: 1,
+		rotation: 45
+	}
+});
+
+//draw a line using a shape
+big.addCommand({
+	type: 'drawLine',
+	brush: 'shape',
+	path: [10,165, 75,120, 100,160, 190,190],
+	stepDist: 10,
+	shape: {
+		shape: 'circle',
+		globalAlpha: 0.2,
+		stroke: true,
+		fill: true,
+		strokeStyle: 'blue',
+		fillStyle: 'blue'
+	}
+});
+		</pre>
+	</div>
+
+
+	<div id="shapes">
+		<h3>Shapes! The most magical shapes!</h3>
+		<p>Shapes can be drawn with strokes or fills, and a bunch are available. </p>
+		<pre class="brush: js">
+//create a bigRender instance
+var big = new bigRender.BigRender('demo-canvas');
+
+//create the layer we will draw on
+big.addCommand({type: 'createLayer'});
+
+//draw a diamond
+big.addCommand({
+	type: 'drawShape',
+	shape: 'rectangle',
+	translateX: 30,
+	translateY: 30,
+	width: 20,
+	height: 20,
+	stroke: true,
+	fill: false,
+	strokeStyle: '#123456',
+	rotation: 45
+});
+
+//draw a triangle
+big.addCommand({
+	type: 'drawShape',
+	shape: 'polygon',
+	sides: 3,
+	translateX: 50,
+	translateY: 125,
+	rotation: 30,
+	radius: 40,
+	stroke: false,
+	fill: true,
+	fillStyle: 'blue'
+});
+
+//draw a circle
+big.addCommand({
+	type: 'drawShape',
+	shape: 'circle',
+	translateX: 100,
+	translateY: 70,
+	radius: 25,
+	strokeStyle: 'green',
+	fillStyle: 'purple'
+});
+
+//draw a star
+big.addCommand({
+	type: 'drawShape',
+	shape: 'star',
+	translateX: 150,
+	translateY: 20,
+	radius: 15,
+	stroke:true,
+	fill:true,
+	fillStyle: 'yellow',
+	strokeStyle: 'orange',
+	lineWidth: 1
+});
+
+//draw a hexagon
+big.addCommand({
+	type: 'drawShape',
+	shape: 'polygon',
+	sides: 6,
+	translateX: 150,
+	translateY: 150,
+	radius: 20,
+	stroke:true,
+	fill:true,
+	fillStyle: 'red',
+	strokeStyle: 'darkred',
+	lineWidth: 10
+});
+		</pre>
+	</div>
+
+
+	<div id="flood-fill">
+		<h3>Flood fill my heart!</h3>
+		<p>Pixel by pixel flood fill for bitmap painting.</p>
+		<pre class="brush: js">
+//create a bigRender instance
+var big = new bigRender.BigRender('demo-canvas');
+
+//create the layer we will draw on
+big.addCommand({type: 'createLayer'});
+
+//draw a diamond
+big.addCommand({
+	type: 'drawShape',
+	shape: 'rectangle',
+	translateX: 100,
+	translateY: 80,
+	width: 20,
+	height: 20,
+	stroke: true,
+	fill: false,
+	strokeStyle: '#123456',
+	rotation: 45
+});
+
+//flood fill around the diamond
+big.addCommand({
+	type: 'floodFill',
+	x: 100,
+	y: 100,
+	width: 100,
+	height: 100,
+	fillStyle: 'purple'
+});
+		</pre>
+	</div>
+
+
+	<div id="objects">
+		<h3>Objectify some things!</h3>
+		<p>Objects can be moved around, edited, and deleted after they have been placed.</p>
+		<pre class="brush: js">
+//create a bigRender instance
+var big = new bigRender.BigRender('demo-canvas');
+
+//create the layer we will draw on
+big.addCommand({type: 'createLayer'});
+
+//tree #1
+big.addCommand({
+	type: 'addObject',
+	src: 'img/tree.jpeg',
+	objectId: 1,
+	x: 50,
+	y: 100,
+	scaleX: 0.25,
+	scaleY: 0.25
+});
+
+//tree #2
+big.addCommand({
+	type: 'addObject',
+	src: 'img/tree.jpeg',
+	objectId: 2,
+	x: 100,
+	y: 100,
+	scaleX: 0.25,
+	scaleY: 0.25
+});
+
+//tree #3
+big.addCommand({
+	type: 'addObject',
+	src: 'img/tree.jpeg',
+	objectId: 3,
+	x: 150,
+	y: 100,
+	scaleX: 0.25,
+	scaleY: 0.25
+});
+
+//flip tree #2 upside down
+big.addCommand({
+	type: 'moveObject',
+	objectId: 2,
+	rotation: 180
+});
+		</pre>
+	</div>
+
+
+	<div id="long-draw">
+		<h3>Wait in style!</h3>
+		<p>Big chunks of commands are automatically broken up and drawn in smaller chunks to keep things responsive.</p>
+		<pre class="brush: js">
+//create a bigRender instance
+var big = new bigRender.BigRender('demo-canvas');
+
+//create the layer we will draw on
+big.addCommand({type: 'createLayer'});
+
+//draw 10,000 lines
+for(var i=0; i<10000; i++) {
+	var x1 = Math.random() * big.width;
+	var y1 = Math.random() * big.height;
+	var x2 = Math.random() * big.width;
+	var y2 = Math.random() * big.height;
+	big.addCommand({
+		type: 'drawLine',
+		path: [x1, y1, x2, y2],
+		lineWidth: 1,
+		strokeStyle: '#123456',
+		globalAlpha: 0.25
+	});
+}
+		</pre>
+	</div>
+
+
+	<div id="layers">
+		<h3>Delicious sandwiches of art!</h3>
+		<p>Layers are a handy way to organize your complicated works of art. You can also set up some parallax scrolling.</p>
+		<pre class="brush: js">
+//create a bigRender instance
+var big = new bigRender.BigRender('demo-canvas');
+
+//create layer #1
+big.addCommand({
+	type: 'createLayer',
+	layerId: 1,
+	scrollPerc: 0,
+	alpha: 0.75
+});
+
+//create layer #2
+big.addCommand({
+	type: 'createLayer',
+	layerId: 2,
+	scrollPerc: 0.33,
+	alpha: 0.66
+});
+
+//create layer #3
+big.addCommand({
+	type: 'createLayer',
+	layerId: 3,
+	scrollPerc: 0.66,
+	alpha: 0.33
+});
+
+//draw a circle on layer #1
+big.addCommand({
+	type: 'drawShape',
+	shape: 'circle',
+	layerId: 1,
+	x: 100,
+	y: 100,
+	radius: 50,
+	strokeStyle: 'green',
+	fillStyle: 'purple'
+});
+
+//draw a circle on layer #2
+big.addCommand({
+	type: 'drawShape',
+	shape: 'circle',
+	layerId: 2,
+	x: 100,
+	y: 100,
+	radius: 50,
+	strokeStyle: 'green',
+	fillStyle: 'purple'
+});
+
+//draw a circle on layer #3
+big.addCommand({
+	type: 'drawShape',
+	shape: 'circle',
+	layerId: 3,
+	x: 100,
+	y: 100,
+	radius: 50,
+	strokeStyle: 'green',
+	fillStyle: 'purple'
+});
+
+//start animating
+beginRandomScrolling();
+
+//do the animating
+var callbackId;
+var scrollX = 0;
+var scrollY = 0;
+function beginRandomScrolling() {
+	endRandomScrolling();
+	animationHandler();
+}
+function endRandomScrolling() {
+	window.cancelAnimationFrame(callbackId);
+}
+function animationHandler() {
+	scrollX += 0.5;
+	scrollY += 0.5;
+	if(scrollX > 100) {
+		scrollX = -100;
+	}
+	if(scrollY > 100) {
+		scrollY = -100;
+	}
+	big.scroll(scrollX, scrollY);
+	callbackId = window.requestAnimationFrame(animationHandler);
+}
+		</pre>
+	</div>
+
 
 	<script>
-		var canvas = document.getElementById('demo-canvas');
-		canvas.width = canvas.height = 200;
-		var r = new bigRender.BigRender(canvas);
-
-		lineTest();
-
-
-		function setTitle(str) {
-			document.getElementById('title').innerHTML = str;
-		}
-
-
-		function setupTest(title) {
-			setTitle(title);
-			endRandomScrolling();
-
-			//clear out any shenanigans from previous tests
-			r.clear();
-
-			//create the layer we will draw on
-			r.addCommand({type: bigRender.command.CREATE_LAYER, scrollPerc: 0});
-
-			//draw a white background
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, width: 200, height: 200, x: 100, y: 100, stroke: false, fill: true, fillStyle: '#FFFFFF'});
-		}
-
-
-		//draw test
-		function lineTest() {
-			setupTest('Line Test');
-
-			//draw a line
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,50,75,5,100,45,190,75], lineWidth: 5, strokeStyle: '#33FF55'});
-
-			//draw a pixel line
-			r.addCommand({type: bigRender.command.DRAW_LINE, path: [10,80,75,35,100,75,190,105], brush: bigRender.brush.PIXEL, fillStyle: '#FF0000'});
-
-			//draw a line using an image
-			r.addCommand({
-				type: bigRender.command.DRAW_LINE,
-				path: [10,115,75,70,100,110,190,140],
-				brush: bigRender.brush.IMAGE,
-				stepDist: .1,
-				image: {
-					src: 'img/brush.png',
-					scaleX: 0.5,
-					scaleY: 0.5,
-					globalAlpha: 0.07,
-					tintColor: '#123456',
-					tintPerc: 1,
-					rotation: 45
-				}
-			});
-
-			//draw a line using a shape
-			r.addCommand({
-				type: bigRender.command.DRAW_LINE,
-				path: [10,165,75,120,100,160,190,190],
-				brush: bigRender.brush.SHAPE,
-				stepDist: 10,
-				shape: {
-					shape: bigRender.shape.CIRCLE,
-					globalAlpha: 0.2,
-					stroke: true,
-					fill: true,
-					strokeStyle: 'purple',
-					fillStyle: 'pink'
-				}
-			});
-		}
-
-		//shape test
-		function shapeTest() {
-			setupTest('Shape Test');
-
-			//draw a diamond
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, translateX: 30, translateY: 30, width: 20, height: 20, stroke: true, fill: false, strokeStyle: '#123456', rotation: 45});
-
-			//draw a triangle
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.POLYGON, sides: 3, translateX: 50, translateY: 125, rotation: 30, radius: 40, stroke: false, fill: true, fillStyle: 'blue'});
-
-			//draw a circle
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.CIRCLE, x: 100, y: 70, radius: 25, strokeStyle: 'green', fillStyle: 'purple'});
-
-			//draw a star
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.STAR, x: 150, y: 20, radius: 15, stroke:true, fill:true, fillStyle: 'yellow', strokeStyle: 'orange', lineWidth: 1});
-
-			//draw a hexagon
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.POLYGON, sides: 6, x: 150, y: 150, radius: 20, stroke:true, fill:true, fillStyle: 'red', strokeStyle: 'darkred', lineWidth: 10});
-		}
-
-
-		//flood fill test
-		function fillTest() {
-			setupTest('Flood Fill Test');
-
-			//draw a diamond
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.RECTANGLE, translateX: 30, translateY: 30, width: 20, height: 20, stroke: true, fill: false, strokeStyle: '#123456', rotation: 45});
-
-			//
-			r.addCommand({type: bigRender.command.FLOOD_FILL, x: 50, y: 50, fillStyle: 'purple'});
-		}
-
-
-		//object test
-		function objTest() {
-			setupTest('Object Test');
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 1, x: 20, y: 100, scaleX: 0.20, scaleY: 0.20, regX: 'center', regY: 'center'});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 2, x: 60, y: 100, scaleX: 0.20, scaleY: 0.20, regX: 'center', regY: 'center'});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 3, x: 100, y: 100, scaleX: 0.20, scaleY: 0.20, regX: 'center', regY: 'center'});
-			r.addCommand({type: bigRender.command.ADD_OBJECT, src: 'img/tree.jpeg', objectId: 4, x: 140, y: 100, scaleX: 0.20, scaleY: 0.20, regX: 'center', regY: 'center'});
-			r.addCommand({type: bigRender.command.MOVE_OBJECT, objectId: 3, rotation: 180});
-		}
-
-
-		//long draw test
-		function longDrawTest() {
-			setupTest('Long Draw Test');
-			for(var i=0; i<10000; i++) {
-				var x1 = Math.random() * r.width;
-				var y1 = Math.random() * r.height;
-				var x2 = Math.random() * r.width;
-				var y2 = Math.random() * r.height;
-				r.addCommand({type: bigRender.command.DRAW_LINE, path: [x1, y1, x2, y2], lineWidth: 1, strokeStyle: '#123456', globalAlpha: 0.25});
-			}
-		}
-
-
-		//layer test
-		function layerTest() {
-			setupTest('Layer Test');
-			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 2, scrollPerc: 0, alpha: 0.75});
-			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 3, scrollPerc: 0.33, alpha: 0.66});
-			r.addCommand({type: bigRender.command.CREATE_LAYER, layerId: 4, scrollPerc: 0.66, alpha: 0.33});
-
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.CIRCLE, layerId: 2, x: 100, y: 100, radius: 50, strokeStyle: 'green', fillStyle: 'purple'});
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.CIRCLE, layerId: 3, x: 100, y: 100, radius: 50, strokeStyle: 'green', fillStyle: 'purple'});
-			r.addCommand({type: bigRender.command.DRAW_SHAPE, shape: bigRender.shape.CIRCLE, layerId: 4, x: 100, y: 100, radius: 50, strokeStyle: 'green', fillStyle: 'purple'});
-
-			beginRandomScrolling();
-		}
-
-		var callbackId;
-		var scrollX = 0;
-		var scrollY = 0;
-		function beginRandomScrolling() {
-			endRandomScrolling();
-			animationHandler();
-		}
-		function endRandomScrolling() {
-			window.cancelAnimationFrame(callbackId);
-		}
-		function animationHandler() {
-			scrollX += .5;
-			scrollY += .5;
-			if(scrollX > 100) {
-				scrollX = -100;
-			}
-			if(scrollY > 100) {
-				scrollY = -100;
-			}
-			r.scroll(scrollX, scrollY);
-			callbackId = window.requestAnimationFrame(animationHandler);
-		}
+		SyntaxHighlighter.all();
+		init();
+		drawLogo();
 	</script>
 
 </body>
