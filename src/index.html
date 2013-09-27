@@ -8,7 +8,7 @@
 	<script src="scripts/underscore.js"></script>
 	<script src="scripts/Color.js"></script>
 
-	<!-- build:js scripts/bigRender.js -->
+	<!-- build:js scripts/BigRender-0.9.js -->
 	<script src="scripts/controller/CommandChainController.js"></script>
 	<script src="scripts/controller/CompositionController.js"></script>
 	<script src="scripts/controller/LayerForwarder.js"></script>
@@ -59,7 +59,9 @@
 </head>
 
 
-<body style="background-color: white">
+<body style="background-color: lightgrey">
+
+	<div id="container" style="margin:20px; padding:20px; padding-top:1px; background-color: white">
 
 	<h1>BigRender</h1>
 	<a href="javascript:drawLogo();">Intro</a> |
@@ -78,7 +80,8 @@
 
 	<div id="setup">
 		<h3>Built for multi-user drawing!</h3>
-		<p>BigRender is a drawing engine built for multi-player apps. Most everything is done by passing in commands, which are simple objects. These commands can be synced from person to person easy breezy.</p>
+		<p>BigRender is a drawing engine built for multi-user apps. Most everything is done by passing in commands, which are simple objects. This has the benefit of making it simple to sync commands from multiple users at once.</p>
+		<p>Download the <a href="scripts/BigRender-0.9.js">latest version</a> or <a href="https://github.com/Jiggmin/BigRender">fork it on github.</a></p>
 		<pre class="brush: js">
 //create a bigRender instance
 var big = new bigRender.BigRender('demo-canvas');
@@ -463,5 +466,6 @@ function animationHandler() {
 		drawLogo();
 	</script>
 
+	</div>
 </body>
 </html>
