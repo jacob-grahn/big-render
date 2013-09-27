@@ -3,19 +3,18 @@
 BigRender is a drawing engine built for multi-user apps. Most everything is done by passing in commands, which are simple objects. This has the benefit of making it simple to sync commands from multiple users at once.
 
 ## Setup
-//Include underscore, easeljs, Color.js, and BigRender in your project. All of these files are available in the scripts folder for easy testing.
+Include underscore, easeljs, Color.js, and BigRender in your project. All of these files are available in the scripts folder for easy testing.
 
-//create a bigRender instance
+Set up a canvas, and pass it into a big render instance. Now you're ready to start adding commands.
+
 var big = new bigRender.BigRender('demo-canvas');
-
-//start adding commands
 big.addCommand({...});
 
 
 ## Quick Docs
 
 **addCommand(object)**
-Add a new drawing command to the stack. The command may not be drawn immediately if there is a backlog of undrawn commands.
+	Add a new drawing command to the stack. The command may not be drawn immediately if there is a backlog of undrawn commands.
 
 **replaceLastCommand(object)**
 Replace the most recent command with a new one. If there are no previous commands, this is the same as addCommand()
@@ -59,7 +58,7 @@ De-reference everything to try to free up memory.
 
 ## Commands
 
-Commands are simply an object with a type parameter. You can add in or omit other values as you see fit. Here are a few example commands. You can see a lot more on [https://jiggmin.com/projects/big-render/build/index.html](the BigRender demo page.)
+Commands are simply an object with a type parameter. You can add in or omit other values as you see fit. Here are a few example commands. You can see a lot more on the [BigRender demo page.](https://jiggmin.com/projects/big-render/build/index.html)
 
 //draw a star
 big.addCommand({
@@ -98,7 +97,7 @@ big.addCommand({
 
 
 ## Support
-* See working examples at [https://jiggmin.com/projects/big-render/build/index.html](the BigRender demo page).
-* Contact me here on github or at [http://jiggmin.com](jiggmin.com).
+* See working examples at the [BigRender demo page.](https://jiggmin.com/projects/big-render/build/index.html)
+* Contact me here on github or at [jiggmin.com.](https://jiggmin.com)
 
 BigRender was built by [Jacob Grahn](https://jiggmin.com), and is released for free under the MIT license. Attribution is welcome, but not required.
