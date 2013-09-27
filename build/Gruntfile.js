@@ -18,6 +18,7 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		yeoman: yeomanConfig,
+
 		watch: {
 			livereload: {
 				options: {
@@ -27,11 +28,11 @@ module.exports = function (grunt) {
 					'<%= yeoman.app %>/*.html',
 					'{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
 					'{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
-					'{.tmp,<%= yeoman.app %>}/examples/{,*/}*.js',
 					'<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
 				]
 			}
 		},
+
 		connect: {
 			options: {
 				port: 9000,
@@ -70,11 +71,13 @@ module.exports = function (grunt) {
 				}
 			}
 		},
+
 		open: {
 			server: {
 				path: 'http://localhost:<%= connect.options.port %>'
 			}
 		},
+
 		clean: {
 			dist: {
 				files: [{
@@ -88,6 +91,7 @@ module.exports = function (grunt) {
 			},
 			server: '.tmp'
 		},
+
 		jshint: {
 			options: {
 				jshintrc: '.jshintrc'
@@ -99,6 +103,7 @@ module.exports = function (grunt) {
 				'test/spec/{,*/}*.js'
 			]
 		},
+
 		rev: {
 			dist: {
 				files: {
@@ -111,19 +116,23 @@ module.exports = function (grunt) {
 				}
 			}
 		},
+
 		useminPrepare: {
 			options: {
+				basedir: '<%= yeoman.app %>',
 				dest: '<%= yeoman.dist %>'
 			},
-			html: '<%= yeoman.app %>/examples.html'
+			html: '<%= yeoman.app %>/**/*.html'
 		},
+
 		usemin: {
 			options: {
 				dirs: ['<%= yeoman.dist %>']
 			},
-			html: ['<%= yeoman.dist %>/{,*/}*.html'],
+			html: ['<%= yeoman.dist %>/**/*.html'],
 			css: ['<%= yeoman.dist %>/styles/{,*/}*.css']
 		},
+
 		imagemin: {
 			dist: {
 				files: [{
@@ -134,6 +143,7 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
+
 		svgmin: {
 			dist: {
 				files: [{
@@ -144,6 +154,7 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
+
 		htmlmin: {
 			dist: {
 				options: {
@@ -165,7 +176,7 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
-		// Put files not handled in other tasks here
+
 		copy: {
 			dist: {
 				files: [{
@@ -177,7 +188,14 @@ module.exports = function (grunt) {
 						'*.{ico,png,txt}',
 						'.htaccess',
 						'images/{,*/}*.{webp,gif}',
-						'styles/fonts/*'
+						'styles/fonts/*',
+						'scripts/Color.js',
+						'scripts/easeljs-0.6.1.min.js',
+						'scripts/underscore.js',
+						'scripts/shBrushJScript.js',
+						'scripts/shCore.js',
+						'scripts/examples.js',
+						'index.html'
 					]
 				}, {
 					expand: true,
@@ -189,6 +207,7 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
+
 		concurrent: {
 			server: [
 			],
