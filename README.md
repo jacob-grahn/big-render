@@ -6,60 +6,60 @@ BigRender is a drawing engine built for multi-user apps. Most everything is done
 Include underscore, easeljs, Color.js, and BigRender in your project. All of these files are available in the scripts folder for easy testing.
 
 Set up a canvas, and pass it into a big render instance. Now you're ready to start adding commands.
-
+```
 var big = new bigRender.BigRender('demo-canvas');
 big.addCommand({...});
-
+```
 
 ## Quick Docs
 
-**addCommand(object)**
-	Add a new drawing command to the stack. The command may not be drawn immediately if there is a backlog of undrawn commands.
+**addCommand(object)**  
+Add a new drawing command to the stack. The command may not be drawn immediately if there is a backlog of undrawn commands.
 
-**replaceLastCommand(object)**
+**replaceLastCommand(object)**  
 Replace the most recent command with a new one. If there are no previous commands, this is the same as addCommand()
 
-**clearLastCommand()**
+**clearLastCommand()**  
 Remove the most recent command from the stack.
 
-**undo()**
+**undo()**  
 Un-draw the last command, but leave it in the stack. The command can be re-drawn by calling redo()
 
-**redo()**
+**redo()**  
 Re-draw a command that was previously un-drawn using undo()
 
-**setTargetLayer(number)**
+**setTargetLayer(number)**  
 Target a layer based on its layerId. Drawing commands that do not specify a layerId will default to this layer.
 
-**scroll(x, y)**
+**scroll(x, y)**  
 Move all layers to the x, y coordinates. If a layer has scrollPercX or scrollPercY defined, the coordinates will be multiplied by those.
 
-**update()**
+**update()**  
 Force the stage to be redrawn immediately. Can be handy if you intend to call getSnapshot() afterwards.
 
-**getSnapshot()**
+**getSnapshot()**  
 Return a canvas containing a flattened copy of BigRender's state.
 
-**getSaveState():object**
+**getSaveState():object**  
 Returns an object containing BigRender's current state.
 
-**setSaveState(object)**
+**setSaveState(object)**  
 Sets BigRender to display this new state.
 
-**setDimensions(w, h)**
+**setDimensions(w, h)**  
 Sets BigRender's display width and height. Maybe be different than the canvas width and height.
 
-**clear()**
+**clear()**  
 Remove all images and clear the command stack.
 
-**remove()**
+**remove()**  
 De-reference everything to try to free up memory.
 
 
 ## Commands
 
-Commands are simply an object with a type parameter. You can add in or omit other values as you see fit. Here are a few example commands. You can see a lot more on the [BigRender demo page.](https://jiggmin.com/projects/big-render/build/index.html)
-
+Commands are simply objects with a 'type' parameter. You can add in or omit other values as you see fit. Here are a few example commands. You can see a lot more on the [BigRender demo page.](https://jiggmin.com/projects/big-render/build/index.html)
+```
 //draw a star
 big.addCommand({
     type: 'drawShape',
@@ -93,7 +93,7 @@ big.addCommand({
         rotation: 45
     }
 });
-
+```
 
 
 ## Support
