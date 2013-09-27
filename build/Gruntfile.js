@@ -119,10 +119,10 @@ module.exports = function (grunt) {
 
 		useminPrepare: {
 			options: {
-				basedir: '<%= yeoman.app %>',
 				dest: '<%= yeoman.dist %>'
 			},
-			html: '<%= yeoman.app %>/**/*.html'
+			html: '<%= yeoman.app %>/**/*.html',
+			css: '<%= yeoman.app %>/**/*.css'
 		},
 
 		usemin: {
@@ -195,7 +195,8 @@ module.exports = function (grunt) {
 						'scripts/shBrushJScript.js',
 						'scripts/shCore.js',
 						'scripts/examples.js',
-						'index.html'
+						'index.html',
+						'styles/*.css'
 					]
 				}, {
 					expand: true,
