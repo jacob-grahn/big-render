@@ -11,6 +11,47 @@ var big = new bigRender.BigRender('demo-canvas');
 big.addCommand({...});
 ```
 
+
+## Commands
+
+Commands are simply objects with a 'type' parameter. You can add in or omit other values as you see fit. Here are a few example commands. You can see a lot more on the [BigRender demo page.](https://jiggmin.com/projects/BigRender/dist/index.html)
+```
+//draw a star
+big.addCommand({
+    type: 'drawShape',
+    shape: 'star',
+    x: 100,
+    y: 100,
+    radius: 100
+});
+
+//draw a vector line
+big.addCommand({
+    type: 'drawLine',
+    path: [10,50, 75,5, 100,45, 190,75],
+    lineWidth: 5,
+    strokeStyle: 'blue'
+});
+
+//draw a line using an image
+big.addCommand({
+    type: 'drawLine',
+    brush: 'image',
+    path: [10,115, 75,70, 100,110, 190,140],
+    stepDist: 0.1,
+    image: {
+        src: 'img/brush.png',
+        scaleX: 0.5,
+        scaleY: 0.5,
+        globalAlpha: 0.07,
+        tintColor: 'blue',
+        tintPerc: 1,
+        rotation: 45
+    }
+});
+```
+
+
 ## Quick Docs
 
 **addCommand(object)**  
@@ -56,48 +97,8 @@ Remove all images and clear the command stack.
 De-reference everything to try to free up memory.
 
 
-## Commands
-
-Commands are simply objects with a 'type' parameter. You can add in or omit other values as you see fit. Here are a few example commands. You can see a lot more on the [BigRender demo page.](https://jiggmin.com/projects/big-render/build/index.html)
-```
-//draw a star
-big.addCommand({
-    type: 'drawShape',
-    shape: 'star',
-    x: 100,
-    y: 100,
-    radius: 100
-});
-
-//draw a vector line
-big.addCommand({
-    type: 'drawLine',
-    path: [10,50, 75,5, 100,45, 190,75],
-    lineWidth: 5,
-    strokeStyle: 'blue'
-});
-
-//draw a line using an image
-big.addCommand({
-    type: 'drawLine',
-    brush: 'image',
-    path: [10,115, 75,70, 100,110, 190,140],
-    stepDist: 0.1,
-    image: {
-        src: 'img/brush.png',
-        scaleX: 0.5,
-        scaleY: 0.5,
-        globalAlpha: 0.07,
-        tintColor: 'blue',
-        tintPerc: 1,
-        rotation: 45
-    }
-});
-```
-
-
 ## Support
-* See working examples at the [BigRender demo page.](https://jiggmin.com/projects/big-render/build/index.html)
+* See working examples at the [BigRender demo page.](https://jiggmin.com/projects/BigRender/dist/index.html)
 * Contact me here on github or at [jiggmin.com.](https://jiggmin.com)
 
 BigRender was built by [Jacob Grahn](https://jiggmin.com), and is released for free under the MIT license. Attribution is welcome, but not required.
