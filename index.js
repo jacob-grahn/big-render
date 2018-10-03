@@ -53,8 +53,10 @@ class BigRender {
   }
 
   render (ctx, offsetX = 0, offsetY = 0) {
+    ctx.translate(offsetX, offsetY)
     this.history.forEach(command => {
-      ctx.fillRect(100, 100, 200, 200)
+      const [func, ...args] = command
+      ctx[func](args)
     })
     return ctx
   }

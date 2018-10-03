@@ -1,0 +1,23 @@
+{
+  "name": "big-render",
+  "version": "1.0.0",
+  "description": "Virtual canvas that is infinitely large",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacob-grahn/big-render.git"
+  },
+  "author": "Jacob Grahn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jacob-grahn/big-render/issues"
+  },
+  "homepage": "https://github.com/jacob-grahn/big-render#readme",
+  "devDependencies": {
+    "canvas": "^1.6.12",
+    "jest": "^23.6.0"
+  }
+}
