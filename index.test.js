@@ -15,12 +15,12 @@ test('draw a square', () => {
   ctx1.fillRect(0, 0, 150, 75)
 
   // hopefuly good
-  const big = new BigRender()
-  big.fillRect(0, 0, 150, 75)
   const canvas2 = new Canvas(200, 200)
   const ctx2 = canvas2.getContext('2d')
+  const big = new BigRender()
+  big.fillRect(0, 0, 150, 75)
   big.render(ctx2)
 
   // compare
-  expect(true).toBe(false)
+  expect(canvas2.toDataURL()).toBe(canvas1.toDataURL())
 })
