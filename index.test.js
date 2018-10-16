@@ -41,3 +41,28 @@ test('draw an offset square', () => {
   // compare
   expect(canvas2.toDataURL()).toBe(canvas1.toDataURL())
 })
+
+test('set lineWidth', () => {
+  // known good
+  const canvas1 = new Canvas(200, 200)
+  const ctx1 = canvas1.getContext('2d')
+  ctx1.lineWidth = 50
+  ctx1.beginPath()
+  ctx1.moveTo(5, 5)
+  ctx1.lineTo(14, 140)
+  ctx1.stroke()
+
+  // hopefuly good
+  const canvas2 = new Canvas(200, 200)
+  const ctx2 = canvas2.getContext('2d')
+  const big = new BigRender()
+  big.lineWidth = 50
+  big.beginPath()
+  big.moveTo(5, 5)
+  big.lineTo(14, 140)
+  big.stroke()
+  big.render(ctx2)
+
+  // compare
+  expect(canvas2.toDataURL()).toBe(canvas1.toDataURL())
+})

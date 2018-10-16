@@ -1,7 +1,7 @@
 {
   "name": "big-render",
   "version": "1.0.0",
-  "description": "Virtual canvas that is infinitely large",
+  "description": "Virtual canvas for really big drawings",
   "main": "index.js",
   "scripts": {
     "test": "jest"

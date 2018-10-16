@@ -38,9 +38,28 @@ const bigRenderMethods = [
   'translate'
 ]
 
+const bigRenderProperties = [
+  'fillStyle',
+  'strokeStyle',
+  'lineWidth',
+  'lineCap',
+  'lineJoin',
+  'miterLimit',
+  'lineDashOffset'
+]
+
 class BigRender {
   constructor () {
     this.history = []
+    bigRenderProperties.forEach(property => {
+      Object.defineProperty(this, property, {
+        get: () => this['_' + property],
+        set: (newValue) => {
+          this['_' + property] = newValue
+          this.history.push(['set', property, newValue])
+        }
+      })
+    })
     bigRenderMethods.forEach(method => {
       this[method] = (...params) => {
         this.history.push([method, ...params])
@@ -56,7 +75,12 @@ class BigRender {
     ctx.translate(-offsetX, -offsetY)
     this.history.forEach(command => {
       const [func, ...args] = command
-      ctx[func](...args)
+      if (func === 'set') {
+        const [field, value] = args
+        ctx[field] = value
+      } else {
+        ctx[func](...args)
+      }
     })
     return ctx
   }
