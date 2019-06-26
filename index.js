@@ -45,7 +45,8 @@ const bigRenderProperties = [
   'lineCap',
   'lineJoin',
   'miterLimit',
-  'lineDashOffset'
+  'lineDashOffset',
+  'globalCompositeOperation'
 ]
 
 class BigRender {
