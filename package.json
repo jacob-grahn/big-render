@@ -1,6 +1,6 @@
 {
   "name": "big-render",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Virtual canvas for really big drawings",
   "main": "index.js",
   "scripts": {
