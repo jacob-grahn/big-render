@@ -1,7 +1,7 @@
 /* global test, expect */
 
 const BigRender = require('./index')
-const Canvas = require('canvas')
+const { createCanvas } = require('canvas')
 
 test('exposes drawing functions', () => {
   const big = new BigRender()
@@ -10,12 +10,12 @@ test('exposes drawing functions', () => {
 
 test('draw a square', () => {
   // known good
-  const canvas1 = new Canvas(200, 200)
+  const canvas1 = createCanvas(200, 200)
   const ctx1 = canvas1.getContext('2d')
   ctx1.fillRect(0, 0, 150, 75)
 
   // hopefuly good
-  const canvas2 = new Canvas(200, 200)
+  const canvas2 = createCanvas(200, 200)
   const ctx2 = canvas2.getContext('2d')
   const big = new BigRender()
   big.fillRect(0, 0, 150, 75)
@@ -27,12 +27,12 @@ test('draw a square', () => {
 
 test('draw an offset square', () => {
   // known good
-  const canvas1 = new Canvas(200, 200)
+  const canvas1 = createCanvas(200, 200)
   const ctx1 = canvas1.getContext('2d')
   ctx1.fillRect(50, 50, 100, 100)
 
   // hopefuly good
-  const canvas2 = new Canvas(200, 200)
+  const canvas2 = createCanvas(200, 200)
   const ctx2 = canvas2.getContext('2d')
   const big = new BigRender()
   big.fillRect(5050, 5050, 100, 100)
@@ -44,7 +44,7 @@ test('draw an offset square', () => {
 
 test('set lineWidth', () => {
   // known good
-  const canvas1 = new Canvas(200, 200)
+  const canvas1 = createCanvas(200, 200)
   const ctx1 = canvas1.getContext('2d')
   ctx1.lineWidth = 50
   ctx1.beginPath()
@@ -53,7 +53,7 @@ test('set lineWidth', () => {
   ctx1.stroke()
 
   // hopefuly good
-  const canvas2 = new Canvas(200, 200)
+  const canvas2 = createCanvas(200, 200)
   const ctx2 = canvas2.getContext('2d')
   const big = new BigRender()
   big.lineWidth = 50
